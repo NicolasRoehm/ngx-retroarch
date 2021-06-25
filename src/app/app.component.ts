@@ -1,19 +1,10 @@
-import {Component} from '@angular/core';
-import {BadgeColors} from 'projects/another-angular-components-library/src/enums/badgeColors';
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.less'],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    readonly itemsToSelect = ['First', 'Second', 'More one'];
-
-    message: string | null = null;
-
-    badgeColor: BadgeColors = BadgeColors.PRIMARY;
-
-    onButtonClick() {
-        this.badgeColor = this.badgeColor === BadgeColors.PRIMARY ? BadgeColors.SECONDARY : BadgeColors.PRIMARY;
-    }
+  title = 'ngx-retroarch';
 }

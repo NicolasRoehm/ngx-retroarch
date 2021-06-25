@@ -1,10 +1,13 @@
-import {enableProdMode} from '@angular/core';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import {ButtonElementModule} from './angular-components-library/button/button.module';
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-enableProdMode();
+if (environment.production) {
+  enableProdMode();
+}
 
 platformBrowserDynamic()
-    .bootstrapModule(ButtonElementModule)
-    .catch(err => console.error(err));
+  .bootstrapModule(AppModule, { ngZone: 'noop' })
+  .catch(err => console.error(err));

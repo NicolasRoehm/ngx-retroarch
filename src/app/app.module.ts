@@ -1,14 +1,22 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+// Angular modules
+import { NgModule }         from '@angular/core';
+import { BrowserModule }    from '@angular/platform-browser';
 
-import {AppComponent} from './app.component';
-import {ButtonModule, InputModule} from 'projects/angular-components-library/src/public-api';
-import {BadgeModule} from 'projects/another-angular-components-library/src/public-api';
+// External modules
+import { ComponentsModule } from 'components';
+
+// Components
+import { AppComponent }     from './app.component';
 
 @NgModule({
-    declarations: [AppComponent],
-    imports: [BrowserModule, ButtonModule, BadgeModule, InputModule],
-    providers: [],
-    bootstrap: [AppComponent],
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    ComponentsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
