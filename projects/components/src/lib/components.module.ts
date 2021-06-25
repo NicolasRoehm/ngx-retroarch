@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
-import { ComponentsComponent } from './components.component';
+// Angular modules
+import { NgModule }          from '@angular/core';
 
-
+// Components
+import { EmulatorComponent } from './components/emulator.component';
 
 @NgModule({
-  declarations: [ComponentsComponent],
+  declarations: [EmulatorComponent],
   imports: [
   ],
-  exports: [ComponentsComponent]
+  exports: [EmulatorComponent]
 })
 export class ComponentsModule { }

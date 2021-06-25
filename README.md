@@ -1,5 +1,8 @@
 # NgxRetroarch
 
+Based on https://notiz.dev/blog/create-a-component-library-for-angular-and-the-web
+And https://github.com/BinBashBanana/webretro
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0.
 
 ## Development server

@@ -2,7 +2,10 @@
   "name": "ngx-retroarch",
   "version": "0.0.0",
   "scripts": {
-    "build:elements": "ng build --prod --project elements --output-hashing none && npm run pack:elements && cp projects/elements/package.json dist/elements",
+    "build:all": "npm run build:components && npm run build:elements",
+    "copy:cores": "cp projects/components/src/assets/* dist/elements",
+    "copy:index": "cp projects/elements/src/assets/demo.html dist/elements/index.html && cp projects/elements/src/assets/Goof_Troop.zip dist/elements",
+    "build:elements": "ng build --prod --project elements --output-hashing none && npm run pack:elements && npm run copy:cores && cp projects/elements/package.json dist/elements",
     "pack:elements": "cat ./dist/elements/{runtime,polyfills,main}.js > dist/elements/elements.js && ls -lah dist/elements/elements.js",
     "build:components": "ng build --prod --project components",
     "ng": "ng",
@@ -10,7 +13,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "demo": "npm run build:all && npm run copy:index && npx http-server ./dist/elements/ -p 4300"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +30,7 @@
     "document-register-element": "^1.7.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "unzipit": "^1.3.5",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

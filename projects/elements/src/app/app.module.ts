@@ -6,7 +6,7 @@ import { BrowserModule }       from '@angular/platform-browser';
 
 // Components
 import { ComponentsModule }    from 'components';
-import { ComponentsComponent } from 'components';
+import { EmulatorComponent }   from 'components';
 
 @NgModule({
   imports: [
@@ -21,7 +21,7 @@ export class AppModule {
 
   ngDoBootstrap()
   {
-    const element = createCustomElement(ComponentsComponent, { injector: this.injector })
+    const element = createCustomElement(EmulatorComponent, { injector: this.injector });
     customElements.define('lib-components', element);
   }
 

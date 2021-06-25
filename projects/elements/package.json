@@ -8,5 +8,5 @@
   },
   "author": "Nicolas Roehm",
   "license": "ISC",
-  "files": ["elements.js", "styles.css"]
+  "files": ["elements.js", "styles.css", "snes9x_libretro.js", "snes9x_libretro.wasm"]
 }
