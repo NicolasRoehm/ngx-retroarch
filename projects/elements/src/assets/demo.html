@@ -8,16 +8,9 @@
   <script src="./elements.js"></script>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <h1>Ngx Retroarch</h1>
+  <lib-components></lib-components>
   <script>
-    var Module = {
-      canvas: document.getElementById('canvas'),
-      noInitialRun: true,
-      arguments: ['/rom.bin', '--verbose'],
-      onRuntimeInitialized: function() {
-        console.log('WASM compiled');
-      }
-    };
   </script>
 </body>
 </html>

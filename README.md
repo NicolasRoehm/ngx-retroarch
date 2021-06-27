@@ -1,9 +1,12 @@
 # NgxRetroarch
 
-Based on https://notiz.dev/blog/create-a-component-library-for-angular-and-the-web
-And https://github.com/BinBashBanana/webretro
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0.
+
+## Thanks
+
+- [Angular Elements: Create a Component Library for Angular and the Web](https://notiz.dev/blog/create-a-component-library-for-angular-and-the-web)
+- [Angular library and live reload](https://stackoverflow.com/a/59706221/7462178)
+- [BinBashBanana/webretro](https://github.com/BinBashBanana/webretro)
 
 ## Development server
 
