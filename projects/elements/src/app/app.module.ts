@@ -21,8 +21,8 @@ export class AppModule {
 
   ngDoBootstrap()
   {
-    const element = createCustomElement(EmulatorComponent, { injector: this.injector });
-    customElements.define('lib-components', element);
+    const element = createCustomElement(EmulatorComponent, { injector : this.injector });
+    customElements.define('ngx-retroarch', element);
   }
 
 }

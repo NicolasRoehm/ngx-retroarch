@@ -10,8 +10,9 @@
     "e2e": "ng e2e",
     "copy:imgs": "cp -r src/assets/assets/* dist/elements/assets",
     "copy:libs": "cp src/assets/*.{txt,js,wasm} dist/elements",
-    "copy:demo": "cp projects/elements/src/assets/demo.html dist/elements/index.html && cp src/assets/roms/* dist/elements",
-    "copy:assets": "npm run copy:imgs && npm run copy:libs",
+    "copy:index": "cp projects/elements/src/assets/demo.html dist/elements/index.html",
+    "copy:rom": "cp src/assets/roms/* dist/elements",
+    "copy:assets": "npm run copy:imgs && npm run copy:libs && npm run copy:index",
     "build:components": "ng build --prod --project components",
     "build:elements": "ng build --prod --project elements --output-hashing none && npm run pack:elements && npm run copy:assets && cp projects/elements/package.json dist/elements",
     "pack:elements": "cat ./dist/elements/{runtime,polyfills,main}.js > dist/elements/elements.js && ls -lah dist/elements/elements.js",
@@ -20,7 +21,7 @@
     "start:app": "wait-on dist/components/fesm2015 && ng serve --poll 2000",
     "watch:lib": "ng build components --watch",
     "watch:all": "npm run clean && npm-run-all watch:lib start:app",
-    "demo": "npm run build:all && npm run copy:demo && npx http-server ./dist/elements/ -p 4300"
+    "demo": "npm run build:all && npm run copy:rom && npx http-server ./dist/elements/ -p 4300"
   },
   "private": true,
   "dependencies": {

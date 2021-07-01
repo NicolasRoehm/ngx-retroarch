@@ -12,12 +12,13 @@ import { unzip }             from 'unzipit';
 import { Subscription }      from 'rxjs';
 
 // Helpers
-import { EmitterHelper }     from '../helpers/emitter.helper';
+import { EmitterHelper }     from '../../helpers/emitter.helper';
 
 // Models
-import { GameControls }      from '../models/key-binding.model';
+import { GameControls }      from '../../models/key-binding.model';
 
 declare const FS : any;
+declare const Browser : any;
 window['Module'] = {
   canvas       : null,
   noInitialRun : true,
@@ -30,7 +31,7 @@ window['Module'] = {
 };
 
 @Component({
-  selector    : 'lib-components',
+  selector    : 'ngx-retroarch',
   templateUrl : './emulator.component.html',
   styleUrls   : ['./emulator.component.scss']
 })
@@ -46,6 +47,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
   public  romReady       : boolean = false;
   public  wasmReady      : boolean = false;
   public  bundleReady    : boolean = false;
+  public  gameStarted    : boolean = false;
   private wasmReadySub   : Subscription;
 
   // NOTE Data
@@ -239,8 +241,49 @@ export class EmulatorComponent implements OnInit, OnDestroy
 
     // NOTE Start
     window['Module'].callMain(window['Module'].arguments);
+    this.gameStarted = true;
 
     console.log('3 - Game started');
+
+    setTimeout(_ => {
+      // Browser.mainLoop.pause(); // YES
+      // Browser.requestFullscreen(true, false); // Maybe
+      // Browser.exitFullscreen(); // Maybe
+      // Browser.setFullscreenCanvasSize(); // NO
+      // Browser.setWindowedCanvasSize(); // NO
+
+      // TODO After writefile (update config) FS.syncfs()
+
+      // try : FS.stat(path : string, follow : bool)
+      // there is chmod chown + open close = like writeFile options (in 3rd parameter opts.flags 577, opt.mode, opt.canOwn)
+
+    }, 5000);
+  }
+
+  public test() : void
+  {
+    // window['Module']['requestFullscreen'](true, false); // YES
+    // window['Module']['pauseMainLoop'](); // YES
+    // window['Module']['resumeMainLoop'](); // YES
+    // _cmd_saveFiles()
+    // _cmd_save_state()
+    // _cmd_undo_save_state()
+    // _cmd_load_state()
+    // _cmd_undo_load_state()
+    // _cmd_take_screenshot()
+
+    this.gameControls['input_player1_a'] = 'a';
+    this.gameControls['input_player1_l_x_minus'] = 'h';
+    // NOTE https://retropie.org.uk/docs/RetroArch-Configuration/#core-input-remapping
+    // https://user-images.githubusercontent.com/3280180/54955719-78771d80-4f24-11e9-9fca-a1a58c52dc8c.PNG
+    // console.log('/home/web_user/retroarch/userdata/'+this.core+'/'+this.core+'.rmp');
+    FS.writeFile('/home/web_user/retroarch/userdata/config/Snes9x/Snes9x.cfg', this.gameControls.asRetroarchConfig());
+    // /home/web_user/retroarch/userdata/config/remaps/
+    // "/home/web_user/retroarch/userdata/config/Snes9x/rom.cfg"
+    // "/home/web_user/retroarch/userdata/config/Snes9x/.cfg"
+    // "/home/web_user/retroarch/userdata/config/Snes9x/Snes9x.cfg"
+    // FS.apply();
+    // FS.syncfs(() => { });
   }
 
   // -------------------------------------------------------------------------------
