@@ -242,6 +242,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
     // NOTE Start
     window['Module'].callMain(window['Module'].arguments);
     this.gameStarted = true;
+    this.changeDetectorRef.detectChanges();
 
     console.log('3 - Game started');
 
