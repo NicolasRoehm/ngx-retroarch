@@ -47,3 +47,4 @@ Thumbs.db
 
 # Rom
 /src/assets/roms/*
+!/src/assets/roms/.gitkeep

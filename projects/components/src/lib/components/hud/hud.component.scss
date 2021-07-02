@@ -1,3 +1,24 @@
 .btn {
   
 }
+
+.hud-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  .bottom {
+    position: absolute;
+    bottom: -50px;
+    width: 100%;
+    height: 50px;
+    box-shadow: inset 0 -39px 36px -23px rgb(0 0 0 / 83%);
+    transition: all .2s ease-in-out;
+  }
+  &:hover {
+    .bottom {
+      bottom: 0;
+    }
+  }
+}
+
