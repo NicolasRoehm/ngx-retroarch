@@ -1,0 +1,107 @@
+// -------------------------------------------------------------------------------
+// ---- NOTE Keys ----------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+.keyboard-key {
+  display: inline-block;
+  align-items: center;
+  background: linear-gradient(-225deg,#d5dbe4,#f8f8f8);
+  border-radius: 3px;
+  box-shadow: inset 0 -2px 0 0 #cdcde6,inset 0 0 1px 1px #fff,0 1px 2px 1px rgba(30,35,90,0.4);
+  color: #002b6f;
+  height: 18px;
+  justify-content: center;
+  margin-right: .4em;
+  padding-bottom: 2px;
+  padding: 0 5px 3px 5px;
+  position: relative;
+  top: -1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  &:hover {
+    box-shadow: none;
+    background: linear-gradient( 319deg,#d5dbe4,#f8f8f8);
+    color: #7c5ac0;
+  }
+}
+
+// -------------------------------------------------------------------------------
+// ---- NOTE Grid ----------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+.flex-grid {
+  display: flex;
+  justify-content: space-between;
+}
+.col {
+  width: 49%;
+}
+@media (max-width: 500px) {
+  .flex-grid {
+    display: block;
+  }
+}
+
+// -------------------------------------------------------------------------------
+// ---- NOTE Misc ----------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+.modal-content {
+  color: #fff;
+  background-color: #6037b3 !important;
+  border: 2px solid hsla(0,0%,100%,.15);
+  box-shadow: 2px 2px 0 #1b1e3d;
+  border-radius: 0 !important;
+}
+.text-uppercase {
+  text-transform: uppercase;
+}
+h4 {
+  text-align: center;
+  margin: 0;
+}
+
+// -------------------------------------------------------------------------------
+// ---- NOTE Table ---------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+.table>caption+thead>tr:first-child>td,
+.table>caption+thead>tr:first-child>th,
+.table>colgroup+thead>tr:first-child>td,
+.table>colgroup+thead>tr:first-child>th,
+.table>thead:first-child>tr:first-child>td,
+.table>thead:first-child>tr:first-child>th {
+  border-top: 0;
+}
+.table>thead>tr>th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #cdb4ff;
+}
+td, th {
+  padding: 0;
+}
+th {
+  text-transform: uppercase;
+  font-weight: normal;
+  color: #ab82ff;
+}
+table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: #f9f9f92e;
+}

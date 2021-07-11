@@ -1,8 +1,3 @@
-
-.btn {
-  
-}
-
 .hud-wrapper {
   width: 100%;
   height: 100%;
@@ -12,7 +7,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: hsla(271, 76%, 53%, 0.452);
+    background: hsla(0, 0%, 0%, 0.452);
   }
   .bottom {
     position: absolute;
@@ -21,6 +16,20 @@
     height: 50px;
     box-shadow: inset 0 -39px 36px -23px rgb(0 0 0 / 83%);
     transition: all .2s ease-in-out;
+    .btn {
+      color: white;
+      fill: white;
+      background: hsl(260, 100%, 61%);
+      transition: 300ms;
+      align-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      margin: 0 5px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 #1b1e3d;
+      &:hover {
+        background: hsl(260, 100%, 71%);
+      }
+    }
   }
   &:hover {
     .bottom {

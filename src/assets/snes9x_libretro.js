@@ -2220,12 +2220,6 @@ var TTY = {
     put_char: function (tty, val) {
       if (val === null || val === 10) {
         let msg = UTF8ArrayToString(tty.output, 0);
-
-        // RetroArch: Frontend for libretro -- v1.9.0[INFO] [Config]: Loading config from: "/home/web_user/retroarch/userdata/retroarch.cfg"
-        // if (msg.trim() === '[INFO] [Overrides]: Looking for changed settings...')
-        if (msg.trim() === 'RetroArch: Frontend for libretro -- v1.9.0[INFO] [Config]: Loading config from: "/home/web_user/retroarch/userdata/retroarch.cfg"')
-          debugger;
-        // [INFO] [Overrides]: Looking for changed settings...
         err(msg);
         tty.output = [];
       } else {
@@ -6304,11 +6298,9 @@ function _emscripten_set_gamepaddisconnected_callback_on_thread(userData, useCap
 }
 function registerKeyEventCallback(target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString, targetThread) {
   if (!JSEvents.keyEvent) JSEvents.keyEvent = _malloc(164);
-  console.log('registerKeyEventCallback');
   var keyEventHandlerFunc = function (e) {
     var keyEventData = JSEvents.keyEvent;
     var idx = keyEventData >> 2;
-    console.log('registerKeyEventCallback eventTypeString', e.which);
     HEAP32[idx + 0] = e.location;
     HEAP32[idx + 1] = e.ctrlKey;
     HEAP32[idx + 2] = e.shiftKey;
@@ -6325,7 +6317,6 @@ function registerKeyEventCallback(target, userData, useCapture, callbackfunc, ev
     if (wasmTable.get(callbackfunc)(eventTypeId, keyEventData, userData)) e.preventDefault();
   };
   var eventHandler = { target: findEventTarget(target), allowsDeferredCalls: true, eventTypeString: eventTypeString, callbackfunc: callbackfunc, handlerFunc: keyEventHandlerFunc, useCapture: useCapture };
-  // console.log('registerKeyEventCallback eventHandler', e.which);
   JSEvents.registerOrRemoveHandler(eventHandler);
 }
 function _emscripten_set_keydown_callback_on_thread(target, userData, useCapture, callbackfunc, targetThread) {

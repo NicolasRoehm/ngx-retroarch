@@ -1,9 +1,56 @@
 <div class="modal-content">
-  <div class="modal-header">
-    <h4>{{title || 'Confirm'}}</h4>
-  </div>
+  <!-- <div class="modal-header">
+  </div> -->
   <div class="modal-body">
-    <p>{{message || 'Are you sure?'}}</p>
+    <!-- NOTE Tabs -->
+    <ul class="nav nav-tabs">
+      <!-- <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active">
+        <a href="#">{{tab.title}}</a>
+      </li> -->
+    </ul>
+
+    <!-- NOTE Content -->
+    <div class="flex-grid">
+      <div class="col">
+        <h4>DPAD</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><small>Command</small></th>
+              <th><small>Keybinding</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of controls | keyvalue">
+              <ng-container *ngIf="item.key.startsWith('dpad_')">
+                <td class="text-uppercase">{{ item.key.replace('dpad_', '') }}</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey()">{{ item.value }}</span></td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <h4>BUTTONS</h4>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><small>Command</small></th>
+              <th><small>Keybinding</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of controls | keyvalue">
+              <ng-container *ngIf="item.key.startsWith('btn_')">
+                <td class="text-uppercase">{{ item.key.replace('btn_', '') }}</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey()">{{ item.value }}</span></td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-danger" (click)="close()" >Cancel</button>

@@ -26,6 +26,11 @@
   </button>
 
   <!-- NOTE HUD -->
-  <ngx-hud *ngIf="gameStarted"></ngx-hud>
+  <ngx-hud *ngIf="gameStarted"
+    [core]="core"
+    [romName]="romName"
+    [mainConfig]="mainConfig"
+    [playerConfig]="playerConfig"
+  ></ngx-hud>
 
 </div>

@@ -1,15 +1,24 @@
 // Angular modules
 import { Component }          from '@angular/core';
 import { ElementRef }         from '@angular/core';
+import { Input }              from '@angular/core';
 import { OnInit }             from '@angular/core';
 
 // External modules
 import { SimpleModalService } from 'ngx-simple-modal';
 
+// Types
+import { Core }               from '../../types/core.type';
+
 // Components
 import { ControlsComponent }  from '../controls/controls.component';
 
+// Models
+import { MainConfig }         from '../../models/main-config.model';
+import { PlayerConfig }       from '../../models/player-config.model';
+
 declare const RA : any;
+declare const Browser : any;
 
 @Component({
   selector    : 'ngx-hud',
@@ -18,6 +27,13 @@ declare const RA : any;
 })
 export class HudComponent implements OnInit
 {
+  // NOTE Inherited properties
+  @Input() core         : Core;
+  @Input() romName      : string;
+  @Input() mainConfig   : MainConfig;
+  @Input() playerConfig : PlayerConfig;
+
+  // NOTE Component properties
   public  isFullscreen  : boolean = false;
   public  isPaused      : boolean = false;
   public  defaultVolume : number  = 100;
@@ -28,7 +44,7 @@ export class HudComponent implements OnInit
   constructor
   (
     private simpleModalService : SimpleModalService,
-    private elementRef : ElementRef
+    private elementRef         : ElementRef
   )
   {
 
@@ -41,10 +57,6 @@ export class HudComponent implements OnInit
   public async ngOnInit() : Promise<void>
   {
     this.fullscreenSubscription();
-    // (RA.context as AudioContext).onstatechange = (ev) => {
-    //   console.log(ev);
-    //   console.log(RA.context.state);
-    // };
   }
 
   // -------------------------------------------------------------------------------
@@ -61,8 +73,10 @@ export class HudComponent implements OnInit
 
     // NOTE Open modal
     let disposable = this.simpleModalService.addModal(ControlsComponent, {
-      title   : 'Confirm title',
-      message : 'Confirm message'
+      core         : this.core,
+      romName      : this.romName,
+      mainConfig   : this.mainConfig,
+      playerConfig : this.playerConfig,
     })
     .subscribe((isConfirmed : boolean) =>
     {
@@ -130,6 +144,8 @@ export class HudComponent implements OnInit
     // NOTE exitFullscreen is only available on the Document object
     document.exitFullscreen();
     this.isFullscreen = false;
+    // NOTE Resize canvas
+    Browser.setWindowedCanvasSize();
   }
 
   // -------------------------------------------------------------------------------
@@ -175,7 +191,11 @@ export class HudComponent implements OnInit
       // is in fullscreen mode if there is one. If not, the value
       // of the property is null.
       if (!document.fullscreenElement)
+      {
         this.isFullscreen = false;
+        // NOTE Resize canvas
+        Browser.setWindowedCanvasSize();
+      }
     });
   }
 
