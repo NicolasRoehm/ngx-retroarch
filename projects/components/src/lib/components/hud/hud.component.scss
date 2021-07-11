@@ -1,3 +1,4 @@
+
 .btn {
   
 }
@@ -7,6 +8,12 @@
   height: 100%;
   overflow: hidden;
   position: relative;
+  .isPaused {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: hsla(271, 76%, 53%, 0.452);
+  }
   .bottom {
     position: absolute;
     bottom: -50px;

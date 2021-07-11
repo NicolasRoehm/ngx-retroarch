@@ -1,7 +1,13 @@
 // Angular modules
-import { Component }  from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { OnInit }     from '@angular/core';
+import { Component }          from '@angular/core';
+import { ElementRef }         from '@angular/core';
+import { OnInit }             from '@angular/core';
+
+// External modules
+import { SimpleModalService } from 'ngx-simple-modal';
+
+// Components
+import { ControlsComponent }  from '../controls/controls.component';
 
 declare const RA : any;
 
@@ -21,6 +27,7 @@ export class HudComponent implements OnInit
 
   constructor
   (
+    private simpleModalService : SimpleModalService,
     private elementRef : ElementRef
   )
   {
@@ -33,6 +40,7 @@ export class HudComponent implements OnInit
 
   public async ngOnInit() : Promise<void>
   {
+    this.fullscreenSubscription();
     // (RA.context as AudioContext).onstatechange = (ev) => {
     //   console.log(ev);
     //   console.log(RA.context.state);
@@ -42,6 +50,44 @@ export class HudComponent implements OnInit
   // -------------------------------------------------------------------------------
   // ---- NOTE Actions -------------------------------------------------------------
   // -------------------------------------------------------------------------------
+
+  public onClickShowControls() : void
+  {
+    // NOTE Add class to wrapper
+    (this.elementRef.nativeElement.parentElement as Element).classList.add('modal-open');
+
+    // NOTE Pause
+    this.onClickTogglePlayPause(true);
+
+    // NOTE Open modal
+    let disposable = this.simpleModalService.addModal(ControlsComponent, {
+      title   : 'Confirm title',
+      message : 'Confirm message'
+    })
+    .subscribe((isConfirmed : boolean) =>
+    {
+      // NOTE Closing modal
+
+      // NOTE Remove class from wrapper
+      (this.elementRef.nativeElement.parentElement as Element).classList.remove('modal-open');
+
+      // NOTE Play
+      this.onClickTogglePlayPause(false);
+
+      // We get modal result
+      if(isConfirmed) {
+        console.log('accepted');
+      }
+      else {
+        console.log('declined');
+      }
+    });
+    // We can close modal calling disposable.unsubscribe();
+    // If modal was not closed manually close it by timeout
+    // setTimeout(()=>{
+    //     disposable.unsubscribe();
+    // },10000);
+  }
 
   public onChangeVolume(volume : number) : void
   {
@@ -58,16 +104,19 @@ export class HudComponent implements OnInit
     }
   }
 
-  public onClickTogglePlayPause() : void
+  public onClickTogglePlayPause(setPause : boolean = null) : void
   {
-    if (!this.isPaused)
+    if (!this.isPaused && (setPause === null || setPause === true))
     {
       this.isPaused = true;
       window['Module'].pauseMainLoop();
       return;
     }
-    window['Module'].resumeMainLoop();
-    this.isPaused = false;
+    if (this.isPaused && (setPause === null || setPause === false))
+    {
+      window['Module'].resumeMainLoop();
+      this.isPaused = false;
+    }
   }
 
   public async onClickToggleFullscreen() : Promise<void>
@@ -78,7 +127,7 @@ export class HudComponent implements OnInit
       this.isFullscreen = true;
       return;
     }
-    // TODO Listen on "escape" pressed (exited fullscreen)
+    // NOTE exitFullscreen is only available on the Document object
     document.exitFullscreen();
     this.isFullscreen = false;
   }
@@ -117,5 +166,17 @@ export class HudComponent implements OnInit
   // -------------------------------------------------------------------------------
   // ---- NOTE Subscription --------------------------------------------------------
   // -------------------------------------------------------------------------------
+
+  private fullscreenSubscription() : void
+  {
+    (this.elementRef.nativeElement.parentElement as Element).addEventListener('fullscreenchange', (event) =>
+    {
+      // NOTE document.fullscreenElement will point to the element that
+      // is in fullscreen mode if there is one. If not, the value
+      // of the property is null.
+      if (!document.fullscreenElement)
+        this.isFullscreen = false;
+    });
+  }
 
 }

@@ -1,3 +1,8 @@
+<!-- NOTE We are using [ngStyle] instead of *ngIf :
+1. To keep the elements available in the dom
+2. To know if clicked element is a child of .retroarch-container
+3. To know if ngx-retroarch is currently focused -->
+
 <!-- NOTE Game wrapper -->
 <div id="retroarch-container">
 
@@ -5,7 +10,9 @@
   <canvas id="canvas"></canvas>
 
   <!-- NOTE Play button -->
-  <button *ngIf="romReady && bundleReady && !gameStarted" class="playBtn" (click)="initCore()">
+  <button class="playBtn"
+    (click)="onClickPlay()"
+    [ngStyle]="{ 'display' : romReady && bundleReady && !gameStarted ? 'flex' : 'none'}">
     <span>PLAY</span>
     <span>
       <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -22,5 +29,3 @@
   <ngx-hud *ngIf="gameStarted"></ngx-hud>
 
 </div>
-
-<button *ngIf="romReady && bundleReady" (click)="test()">test</button>

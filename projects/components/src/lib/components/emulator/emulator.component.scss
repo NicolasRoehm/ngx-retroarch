@@ -13,18 +13,27 @@
     background: black;
   }
 
-  // NOTE HUD
-  ngx-hud {
+  // NOTE HUD & modal
+  ngx-hud, &.modal-open ::ng-deep simple-modal-holder {
     position: absolute;
     height: 100%;
     width: 100%;
+  }
+
+  // NOTE Modal
+  ::ng-deep simple-modal-holder {
+    @import '../../../../../../node_modules/ngx-simple-modal/styles/simple-modal.scss';
+
+    .modal {
+      position: relative;
+    }
   }
 
   // NOTE Play button
   // https://codepen.io/folaad/pen/YvmRpz
   .playBtn {
     position: absolute;
-    display: flex;
+    // display: flex; // NOTE Dynamically applied
     font-weight: bold;
 
     border: 2px solid rgba(255, 255, 255, 0.15);
@@ -61,7 +70,7 @@
         }
       }
     }
-  
+
     // NOTE Hover
     &:hover {
       transition: 0.5s;
