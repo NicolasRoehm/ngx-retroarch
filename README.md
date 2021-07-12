@@ -8,9 +8,11 @@ RetroArch as a web component.
 - Save & download saved screenshot
 - Auto detect core
 - Add cores + check if there is the same "queueAudio" function in all unminified cores
-- Pause game / Speed / Slow
+- Speed / Slow
+- Show FPS
+- About project
 - Update usage chapter (readme)
-- Fix retroarch quality
+- Disable retroarch on dev mode
 
 ## Usage
 
@@ -51,36 +53,36 @@ npm install @nicolasroehm/ngx-retroarch
 
 ## Source code
 
-0. Install code and dependencies
+1. Download code and install dependencies
 ```sh
 git clone https://github.com/NicolasRoehm/ngx-retroarch
 cd ./ngx-retroarch
 npm install
 ```
-1. Add your rom(s) in the `src/assets/roms` directory
+2. Add your rom(s) in the `src/assets/roms` directory
 
 ### Demo
 
-2. Edit the `rom` and `core` attributes in `src/assets/demo.html`
-3. Build and serve the project
+3. Edit the `rom` and `core` attributes in `src/assets/demo.html`
+4. Build and serve the project
 ```sh
 npm run demo
 ```
-4. Navigate to http://127.0.0.1:4300/.
+5. Navigate to http://127.0.0.1:4300/.
 
 ### Development
 
-2. Edit the `rom` and `core` attributes in `src/app/app.component.html`
+3. Edit the `rom` and `core` attributes in `src/app/app.component.html`
 
-3. Build the library in watch mode
+4. Build the library in watch mode
 ```sh
 npm run watch:all
 ```
-4. Once the library is watched, start the dev server in a new terminal
+5. Once the library is watched, start the dev server in a new terminal
 ```sh
 npm run start
 ```
-5. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+6. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
 
 ### Architecture
 
