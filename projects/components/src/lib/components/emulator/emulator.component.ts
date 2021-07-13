@@ -14,6 +14,7 @@ import { Subscription }      from 'rxjs';
 // Helpers
 import { EmitterHelper }     from '../../helpers/emitter.helper';
 import { StorageHelper }     from '../../helpers/storage.helper';
+import { ContainerQueryHelper } from '../../helpers/container-query.helper';
 
 // Models
 import { PlayerConfig }      from '../../models/player-config.model';
@@ -105,6 +106,8 @@ export class EmulatorComponent implements OnInit, OnDestroy
 
   public async ngOnInit() : Promise<void>
   {
+    ContainerQueryHelper.watchResize();
+
     this.initModule();
 
     // TODO WIP
@@ -164,8 +167,8 @@ export class EmulatorComponent implements OnInit, OnDestroy
     // NOTE Mute Retroarch logging
     if (!this.development)
     {
-      window['Module'].print    = function(text) {};
-      window['Module'].printErr = function(text) {};
+      window['Module'].print    = (text) => {};
+      window['Module'].printErr = (text) => {};
     }
   }
 
