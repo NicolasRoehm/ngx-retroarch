@@ -1,9 +1,12 @@
 // Angular modules
-import { Component }            from '@angular/core';
+import { Component, ElementRef, HostBinding, ViewChild }            from '@angular/core';
+import { Renderer2 }            from '@angular/core';
 import { OnInit }               from '@angular/core';
 
 // External modules
 import { SimpleModalComponent } from 'ngx-simple-modal';
+import { zoomInAnimation } from 'angular-animations';
+import { zoomOutAnimation } from 'angular-animations';
 
 // Helpers
 import { StorageHelper }        from '../../helpers/storage.helper';
@@ -33,7 +36,11 @@ export interface ControlsModel {
 @Component({
   selector    : 'ngx-controls',
   templateUrl : './controls.component.html',
-  styleUrls   : ['./controls.component.scss']
+  styleUrls   : ['./controls.component.scss'],
+  animations  : [
+    zoomInAnimation({ duration : 100 }),
+    zoomOutAnimation(),
+  ],
 })
 export class ControlsComponent extends SimpleModalComponent<ControlsModel, boolean> implements ControlsModel, OnInit
 {
@@ -46,10 +53,12 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   // NOTE Component properties
   public players   : number = 4;
   public activeTab : number = 1;
+  public showListener : boolean = false;
+  @ViewChild('keyListener') listenerEl : ElementRef<HTMLElement>;
 
   public controls : Controls;
 
-  constructor()
+  constructor(private elementRef : ElementRef<HTMLElement>)
   {
     super();
   }
@@ -85,7 +94,37 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
 
   public onClickEditKey() : void
   {
-    this.saveConfig();
+    this.showListener = true;
+
+    this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
+    {
+      console.log('Ok yes', e);
+    });
+    // TODO Add gamepad event listener
+    this.listenerEl.nativeElement.focus();
+    // this.saveConfig();
+  }
+
+  // -------------------------------------------------------------------------------
+  // ---- NOTE Computed props ------------------------------------------------------
+  // -------------------------------------------------------------------------------
+
+  public updateKeyboardLabel(value : string) : string
+  {
+    switch (value)
+    {
+      case 'up' :
+        return '↑';
+      case 'down' :
+        return '↓';
+      case 'left' :
+        return '←';
+      case 'right' :
+        return '→';
+      case 'enter' :
+        return value + ' ↵';
+    }
+    return value;
   }
 
   // -------------------------------------------------------------------------------

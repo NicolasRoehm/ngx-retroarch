@@ -27,7 +27,7 @@ import { FsPath }            from '../../enums/fs-path.enum';
 import { Core }              from '../../types/core.type';
 
 // NOTE Retroarch variables
-declare const wasmTable : any;
+declare const JSEvents : any;
 declare const FS : any;
 window['Module'] = {
   canvas       : null,
@@ -284,6 +284,9 @@ export class EmulatorComponent implements OnInit, OnDestroy
     this.gameStarted = true;
 
     this.devLog('3 - Game started');
+
+    // NOTE Remove wheel event listener : Unable to preventDefault inside passive event listener invocation.
+    JSEvents.removeAllHandlersOnTarget(document, 'wheel');
   }
 
   // -------------------------------------------------------------------------------

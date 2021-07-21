@@ -1,11 +1,16 @@
 <!-- Icons : https://fonts.google.com/icons?selected=Material+Icons -->
 
-<div class="hud-wrapper">
+<div class="hud-wrapper" [ngStyle]="{ 'cursor' : isMouseMoving ? 'default' : 'none'}">
+
+  <!-- NOTE Pause -->
   <div class="isPaused" *ngIf="isPaused">
-    <!-- TODO Show pause icon -->
-    <!-- On click -> play again -->
+    <svg (click)="onClickTogglePlayPause()" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+    </svg>
   </div>
-  <div class="bottom">
+
+  <div class="bottom" (mouseenter)="onMouseEnterHUD()" (mouseleave)="onLeaveEnterHUD()" *ngIf="isMouseMoving" [@slideInUpOnEnter] [@slideOutDownOnLeave]>
     <div class="left">
       <!-- NOTE Controls -->
       <button (click)="onClickShowControls()" class="btn">

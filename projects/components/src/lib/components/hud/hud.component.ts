@@ -5,7 +5,12 @@ import { Input }              from '@angular/core';
 import { OnInit }             from '@angular/core';
 
 // External modules
-import { SimpleModalService } from 'ngx-simple-modal';
+import { SimpleModalService }           from 'ngx-simple-modal';
+import { slideInUpOnEnterAnimation }    from 'angular-animations';
+import { slideOutDownOnLeaveAnimation } from 'angular-animations';
+import { fromEvent }                    from 'rxjs';
+import { timer }                        from 'rxjs';
+import { sample }                       from 'rxjs/operators';
 
 // Types
 import { Core }               from '../../types/core.type';
@@ -23,7 +28,11 @@ declare const Browser : any;
 @Component({
   selector    : 'ngx-hud',
   templateUrl : './hud.component.html',
-  styleUrls   : ['./hud.component.scss']
+  styleUrls   : ['./hud.component.scss'],
+  animations  : [
+    slideInUpOnEnterAnimation({ duration : 200 }),
+    slideOutDownOnLeaveAnimation({ duration : 200 }),
+  ],
 })
 export class HudComponent implements OnInit
 {
@@ -36,9 +45,12 @@ export class HudComponent implements OnInit
   // NOTE Component properties
   public  isFullscreen  : boolean = false;
   public  isPaused      : boolean = false;
+  public  isMouseMoving : boolean = false;
+  public  isHUDHovered  : boolean = false;
   public  defaultVolume : number  = 100;
   public  volume        : number  = this.defaultVolume;
 
+  private movingTimeout : ReturnType<typeof setTimeout>;
   private audioOverride : boolean = false;
 
   constructor
@@ -57,11 +69,35 @@ export class HudComponent implements OnInit
   public async ngOnInit() : Promise<void>
   {
     this.fullscreenSubscription();
+    this.watchDebouncedMouse();
+  }
+
+  private watchDebouncedMouse() : void
+  {
+    // NOTE Starts at 0 and gives 1,2,3 as values each 1000 milliseconds
+    const eachSecond$ = timer(0, 1000);
+    const mouseMove$  = fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mousemove');
+
+    const mouseMoveEachSecond$ = eachSecond$.pipe(sample(mouseMove$));
+
+    mouseMoveEachSecond$.subscribe(_ => this.setIsMouseMoving());
   }
 
   // -------------------------------------------------------------------------------
   // ---- NOTE Actions -------------------------------------------------------------
   // -------------------------------------------------------------------------------
+
+  public onMouseEnterHUD() : void
+  {
+    this.isHUDHovered = true;
+    clearTimeout(this.movingTimeout);
+  }
+
+  public onLeaveEnterHUD() : void
+  {
+    this.isHUDHovered = false;
+    this.setIsMouseMoving();
+  }
 
   public onClickShowControls() : void
   {
@@ -105,8 +141,6 @@ export class HudComponent implements OnInit
 
   public onChangeVolume(volume : number) : void
   {
-    // FIXME Gain can be controlled in runtime with input_volume_up/input_volume_down/
-
     this.volume = volume * 0.01;
 
     // NOTE Overide audio loop
@@ -154,7 +188,7 @@ export class HudComponent implements OnInit
 
   private overrideQueueAudio() : void
   {
-    // It comes from unminified snes9x_libretro.js file at line 1266
+    // NOTE It comes from unminified snes9x_libretro.js file at line 1266
     RA.queueAudio = function () {
       var index = RA.bufIndex;
       var startTime;
@@ -177,6 +211,29 @@ export class HudComponent implements OnInit
     gainNode.connect(RA.context.destination);
     bufferSource.connect(gainNode);
     gainNode.gain.setValueAtTime(this.volume, RA.context.currentTime);
+  }
+
+  public setIsMouseMoving() : void
+  {
+    if (this.isHUDHovered)
+      return;
+
+    if (this.isMouseMoving)
+    {
+      clearTimeout(this.movingTimeout);
+      this.setMovingTimeout();
+      return;
+    }
+    this.isMouseMoving = true;
+    this.setMovingTimeout();
+  }
+
+  private setMovingTimeout() : void
+  {
+    this.movingTimeout = setTimeout(_ =>
+    {
+      this.isMouseMoving = false;
+    }, 3000);
   }
 
   // -------------------------------------------------------------------------------
