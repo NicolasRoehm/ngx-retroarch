@@ -1,8 +1,8 @@
 // Angular modules
-import { Component }          from '@angular/core';
-import { ElementRef }         from '@angular/core';
-import { Input }              from '@angular/core';
-import { OnInit }             from '@angular/core';
+import { Component }                    from '@angular/core';
+import { ElementRef }                   from '@angular/core';
+import { Input }                        from '@angular/core';
+import { OnInit }                       from '@angular/core';
 
 // External modules
 import { SimpleModalService }           from 'ngx-simple-modal';
@@ -11,16 +11,18 @@ import { slideOutDownOnLeaveAnimation } from 'angular-animations';
 import { fromEvent }                    from 'rxjs';
 import { timer }                        from 'rxjs';
 import { sample }                       from 'rxjs/operators';
+import                                       'range-slider-element';
 
 // Types
-import { Core }               from '../../types/core.type';
+import { Core }                         from '../../types/core.type';
 
 // Components
-import { ControlsComponent }  from '../controls/controls.component';
+import { ControlsComponent }            from '../controls/controls.component';
 
 // Models
-import { MainConfig }         from '../../models/main-config.model';
-import { PlayerConfig }       from '../../models/player-config.model';
+import { MainConfig }                   from '../../models/main-config.model';
+import { PlayerConfig }                 from '../../models/player-config.model';
+
 
 declare const RA : any;
 declare const Browser : any;
@@ -45,9 +47,10 @@ export class HudComponent implements OnInit
   // NOTE Component properties
   public  isFullscreen  : boolean = false;
   public  isPaused      : boolean = false;
+  public  isMuted       : boolean = false;
   public  isMouseMoving : boolean = false;
   public  isHUDHovered  : boolean = false;
-  public  defaultVolume : number  = 100;
+  public  defaultVolume : number  = 1; // From 0 to 1 with 0.01 by step
   public  volume        : number  = this.defaultVolume;
 
   private movingTimeout : ReturnType<typeof setTimeout>;
@@ -59,7 +62,6 @@ export class HudComponent implements OnInit
     private elementRef         : ElementRef
   )
   {
-
   }
 
   // -------------------------------------------------------------------------------
@@ -68,6 +70,7 @@ export class HudComponent implements OnInit
 
   public async ngOnInit() : Promise<void>
   {
+    this.overrideQueueAudio();
     this.fullscreenSubscription();
     this.watchDebouncedMouse();
   }
@@ -139,17 +142,17 @@ export class HudComponent implements OnInit
     // },10000);
   }
 
-  public onChangeVolume(volume : number) : void
+  public onInputVolume(volume : number) : void
   {
     this.volume = volume * 0.01;
+    // NOTE Unmute
+    if (this.volume > 0 && this.isMuted)
+      this.isMuted = false;
+  }
 
-    // NOTE Overide audio loop
-    if (!this.audioOverride)
-    {
-      this.overrideQueueAudio();
-      this.audioOverride = true;
-      return;
-    }
+  public onClickToggleMute() : void
+  {
+    this.isMuted = !this.isMuted;
   }
 
   public onClickTogglePlayPause(setPause : boolean = null) : void
@@ -188,6 +191,12 @@ export class HudComponent implements OnInit
 
   private overrideQueueAudio() : void
   {
+    // NOTE Overide audio loop
+    if (this.audioOverride)
+      return;
+
+    this.audioOverride = true;
+
     // NOTE It comes from unminified snes9x_libretro.js file at line 1266
     RA.queueAudio = function () {
       var index = RA.bufIndex;
@@ -210,7 +219,7 @@ export class HudComponent implements OnInit
     const gainNode = RA.context.createGain();
     gainNode.connect(RA.context.destination);
     bufferSource.connect(gainNode);
-    gainNode.gain.setValueAtTime(this.volume, RA.context.currentTime);
+    gainNode.gain.setValueAtTime(this.isMuted ? 0 : this.volume, RA.context.currentTime);
   }
 
   public setIsMouseMoving() : void

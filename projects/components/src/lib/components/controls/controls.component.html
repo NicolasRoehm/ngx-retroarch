@@ -1,9 +1,12 @@
 <div class="modal-content">
 
+  <!-- NOTE Key listener -->
   <div class="key-listener" #keyListener tabindex="0"
-    [ngStyle]="{ 'display' : showListener ? 'flex' : 'none'}"
-    [@zoomIn]="showListener" [@zoomOut]="!showListener">
+    *ngIf="showListener" [@zoomInOnEnter] [@zoomOutOnLeave]>
     <!-- <div> -->
+      <button (click)="showListener = false" class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
       <div>Press keyboard or gamepad button</div>
       <div class="binding">
         <!-- TODO Grey current key -->
@@ -13,15 +16,15 @@
     <!-- </div> -->
   </div>
 
-  <!-- <div class="modal-header">
-  </div> -->
-  <div class="modal-body">
+  <div class="modal-header">
     <!-- NOTE Tabs -->
-    <ul class="nav nav-tabs">
-      <!-- <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active">
-        <a href="#">{{tab.title}}</a>
-      </li> -->
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item" *ngFor="let player of [].constructor(players); let i = index">
+        <a class="nav-link" [class.active]="activePlayer === i + 1" (click)="activePlayer = i + 1">Player {{ i + 1 }}</a>
+      </li>
     </ul>
+  </div>
+  <div class="modal-body">
 
     <!-- NOTE Content -->
     <div class="flex-grid">
@@ -38,19 +41,19 @@
           <tbody>
             <tr>
               <td class="text-uppercase">UP</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.dpad_up) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_up) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">DOWN</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.dpad_down) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_down) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">LEFT</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.dpad_left) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_left) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">RIGHT</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.dpad_right) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_right) }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -68,35 +71,35 @@
           <tbody>
             <tr>
               <td class="text-uppercase">START</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_start) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_start) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">SELECT</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_select) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_select) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">A</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_a) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_a) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">B</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_b) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_b) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">X</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_x) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_x) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">Y</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_y) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_y) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">L</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_l) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_l) }}</span></td>
             </tr>
             <tr>
               <td class="text-uppercase">R</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls.btn_r) }}</span></td>
+              <td><span class="keyboard-key" (click)="onClickEditKey()">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_r) }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -107,10 +110,15 @@
 
   </div>
   <div class="modal-footer">
-    <button type="button">Save settings for all SNES games</button>
-    <button type="button">Save settings only for this game</button>
-    <button type="button">Reset</button>
-    <button type="button">Close</button>
+    <div>
+      <button class="btn" type="button">Save for all SNES games</button>
+      <button class="btn" type="button">Save only for this game</button>
+    </div>
+    <div>
+      <button class="btn reset" type="button">Reset</button>
+      <button class="btn close" type="button">Close</button>
+    </div>
+
     <!-- <button type="button" class="btn btn-outline-danger" (click)="close()" >Cancel</button>
     <button type="button" class="btn btn-primary" (click)="confirm()">OK</button> -->
   </div>

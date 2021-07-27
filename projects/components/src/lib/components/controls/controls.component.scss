@@ -46,20 +46,46 @@
 // ---- NOTE Key listener --------------------------------------------------------
 // -------------------------------------------------------------------------------
 
+$key-bg: rgb(27 0 92 / 76%);
+$key-bg-anim: #6b00a2db;
+
 .key-listener {
   position: absolute;
   width: 100%;
   height: 100%;
   z-index: 1;
-  background: rgb(27 0 92 / 76%);
+  background: $key-bg;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  &:not(:focus) {
+    -webkit-animation: changeBackgroundColor 2s infinite;
+    -moz-animation: changeBackgroundColor 2s infinite;
+    -o-animation: changeBackgroundColor 2s infinite;
+    animation: changeBackgroundColor 2s infinite;
+  }
+  .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
   .binding {
     width: 100%;
     background: black;
     height: 50px;
+  }
+}
+
+@keyframes changeBackgroundColor {
+  0% {
+    background-color: $key-bg-anim;
+  }
+  50% {
+    background-color: $key-bg;
+  }
+  100% {
+    background-color: $key-bg-anim;
   }
 }
 
@@ -70,8 +96,6 @@
 .modal-content {
   color: #fff;
   background-color: #6037b3 !important;
-  // border: 2px solid hsla(0,0%,100%,.15);
-  // box-shadow: 2px 2px 0 #1b1e3d;
   border-radius: 0 !important;
 }
 .text-uppercase {
@@ -80,6 +104,58 @@
 h4 {
   text-align: center;
   margin: 0;
+}
+.btn {
+  background: #7c5ac0;
+  border: 0; //1px solid hsla(0,0%,100%,.15);
+  color: #fff;
+  margin: 0px 6px 6px 0 !important;
+  padding: 7px;
+  cursor: pointer;
+  &.reset {
+    background: #b53f80;
+  }
+  &.close {
+    background: #452782;
+    color: #fff;
+  }
+}
+
+// -------------------------------------------------------------------------------
+// ---- NOTE Tabs ----------------------------------------------------------------
+// -------------------------------------------------------------------------------
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  margin: 0;
+  list-style: none;
+  &.nav-fill {
+    .nav-item {
+      flex: 1 1 auto;
+      text-align: center;
+      .nav-link {
+        width: 100%;
+        background: 0 0;
+        border: 0;
+        display: block;
+        padding: 10px 0;
+        color: #c4a7ff;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+        &:hover {
+          color: #fff;
+          background-color: #c4a7ff2e;
+        }
+        &.active {
+          color: #fff;
+          background-color: #7c5ac0;
+        }
+      }
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------

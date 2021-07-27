@@ -33,19 +33,26 @@
     transition: all .2s ease-in-out;
     div.left {
       flex-grow: 1;
+      .volume {
+        align-items: center;
+        display: inline-flex;
+      }
     }
     button.btn {
       color: white;
       fill: white;
-      background: hsl(260, 100%, 61%);
-      transition: 300ms;
+      filter: drop-shadow(2px 2px 1px #000);
       align-items: center;
-      border: 2px solid rgba(255, 255, 255, 0.15);
       margin: 0 5px;
       cursor: pointer;
-      box-shadow: 2px 2px 0 #1b1e3d;
+      background: none;
+      border: none;
+      svg {
+        width: 30px;
+        height: 30px;
+      }
       &:hover {
-        background: hsl(260, 100%, 71%);
+        fill: hsl(260, 100%, 71%);
       }
     }
   }
@@ -70,4 +77,69 @@
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
+}
+
+// @import '../../../../../../node_modules/range-slider-element/dist/styles.css';
+::ng-deep range-slider {
+  --element-height: 24px;
+  --track-height: 3px;
+  --thumb-size: 16px;
+  // --value-percent: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--element-height);
+  width: 100%;
+  min-width: 130px;
+  margin: 2px;
+  overflow: visible;
+  cursor: pointer;
+  touch-action: none;
+  &:focus {
+    outline: 0;
+    .thumb {
+      box-shadow: 0 0 0 0.3em rgba(98, 33, 234, .2);
+    }
+  }
+  &::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: var(--track-height);
+    border-radius: calc(var(--track-height) / 2);
+    background: linear-gradient(#6221ea, #6221ea) 0/ var(--value-percent, 0%) 100% no-repeat #fff;//#c6afe5;
+  }
+  &[disabled] {
+    filter: grayscale(1);
+    opacity: 0.8;
+  }
+  .thumb-wrapper {
+    position: absolute;
+    left: calc(var(--thumb-size) / 2);
+    right: calc(var(--thumb-size) / 2);
+    bottom: 0;
+    height: 0;
+    overflow: visible;
+    .thumb {
+      background: #6221ea;
+      border-radius: 50%;
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      position: absolute;
+      bottom: calc(var(--element-height) / 2 - var(--thumb-size) / 2);
+      left: var(--value-percent, 0%);
+      margin-left: calc(var(--thumb-size) / 2 * -1);
+      transition: transform 200ms ease;
+      will-change: transform;
+      pointer-events: none;
+    }
+  }
+  &.touch-active {
+    .thumb-wrapper {
+      .thumb {
+        box-shadow: none;
+        transform: scale(1.3);
+      }
+    }
+  }
 }

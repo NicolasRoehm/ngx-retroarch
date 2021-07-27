@@ -1,26 +1,28 @@
 // Angular modules
-import { Component, ElementRef, HostBinding, ViewChild }            from '@angular/core';
-import { Renderer2 }            from '@angular/core';
-import { OnInit }               from '@angular/core';
+import { ChangeDetectorRef }       from '@angular/core';
+import { Component }               from '@angular/core';
+import { ElementRef }              from '@angular/core';
+import { ViewChild }               from '@angular/core';
+import { OnInit }                  from '@angular/core';
 
 // External modules
-import { SimpleModalComponent } from 'ngx-simple-modal';
-import { zoomInAnimation } from 'angular-animations';
-import { zoomOutAnimation } from 'angular-animations';
+import { zoomInOnEnterAnimation }  from 'angular-animations';
+import { zoomOutOnLeaveAnimation } from 'angular-animations';
+import { SimpleModalComponent }    from 'ngx-simple-modal';
 
 // Helpers
-import { StorageHelper }        from '../../helpers/storage.helper';
+import { StorageHelper }           from '../../helpers/storage.helper';
 
 // Models
-import { PlayerConfig }         from '../../models/player-config.model';
-import { MainConfig }           from '../../models/main-config.model';
-import { Controls }             from '../../models/controls.model';
+import { PlayerConfig }            from '../../models/player-config.model';
+import { MainConfig }              from '../../models/main-config.model';
+import { Controls }                from '../../models/controls.model';
 
 // Enums
-import { FsPath }               from '../../enums/fs-path.enum';
+import { FsPath }                  from '../../enums/fs-path.enum';
 
 // Types
-import { Core }                 from '../../types/core.type';
+import { Core }                    from '../../types/core.type';
 
 // NOTE Retroarch variables
 declare const wasmTable : any;
@@ -38,8 +40,8 @@ export interface ControlsModel {
   templateUrl : './controls.component.html',
   styleUrls   : ['./controls.component.scss'],
   animations  : [
-    zoomInAnimation({ duration : 100 }),
-    zoomOutAnimation(),
+    zoomInOnEnterAnimation({ duration : 100 }),
+    zoomOutOnLeaveAnimation({ duration : 300 }),
   ],
 })
 export class ControlsComponent extends SimpleModalComponent<ControlsModel, boolean> implements ControlsModel, OnInit
@@ -51,14 +53,16 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   public playerConfig : PlayerConfig;
 
   // NOTE Component properties
-  public players   : number = 4;
-  public activeTab : number = 1;
-  public showListener : boolean = false;
+  public players      : number = 4;
+  public activePlayer : number = 1;
+
+  public listenerHasFocus : boolean = false;
+  public showListener     : boolean = false;
   @ViewChild('keyListener') listenerEl : ElementRef<HTMLElement>;
 
-  public controls : Controls;
+  public controls : Controls[] = [];
 
-  constructor(private elementRef : ElementRef<HTMLElement>)
+  constructor(private changeDetectorRef : ChangeDetectorRef)
   {
     super();
   }
@@ -95,14 +99,22 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   public onClickEditKey() : void
   {
     this.showListener = true;
+    this.changeDetectorRef.detectChanges();
 
+    // NOTE Keyboard event listener
     this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
     {
-      console.log('Ok yes', e);
+      // TODO Show new key
+      // this.saveConfig();
+      setTimeout(() =>
+      {
+        this.showListener = false;
+      }, 2000);
     });
-    // TODO Add gamepad event listener
+    // NOTE Focus element
     this.listenerEl.nativeElement.focus();
-    // this.saveConfig();
+
+    // TODO Add gamepad event listener
   }
 
   // -------------------------------------------------------------------------------
@@ -152,7 +164,10 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
 
   private setControls() : void
   {
-    this.controls = new Controls(this.playerConfig, this.activeTab);
+    let controls : Controls[] = [];
+    for (let i = 1; i <= this.players; i++)
+      controls.push(new Controls(this.playerConfig, i));
+    this.controls = controls;
   }
 
 }

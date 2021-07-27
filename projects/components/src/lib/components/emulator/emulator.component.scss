@@ -47,6 +47,12 @@
         transition: opacity 300ms ease-in-out;
         .modal-content {
           transform: none !important;
+          .modal-header, .modal-footer {
+            display: block !important;
+            height: auto;
+            background: #0000002e;
+            border: none;
+          }
         }
       }
     }
