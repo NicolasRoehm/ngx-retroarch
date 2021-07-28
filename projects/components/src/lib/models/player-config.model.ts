@@ -1,5 +1,5 @@
 // Models
-import { Config }        from './config.model';
+import { Config } from './config.model';
 
 export class PlayerConfig extends Config
 {
@@ -8,12 +8,12 @@ export class PlayerConfig extends Config
   public input_player1_b         : string = 'c';
   public input_player1_x         : string = 's';
   public input_player1_y         : string = 'z';
-  public input_player1_up        : string = 'up';
-  public input_player1_down      : string = 'down';
-  public input_player1_left      : string = 'left';
-  public input_player1_right     : string = 'right';
-  public input_player1_start     : string = 'enter';
-  public input_player1_select    : string = 'shift';
+  public input_player1_up        : string = 'ArrowUp';
+  public input_player1_down      : string = 'ArrowDown';
+  public input_player1_left      : string = 'ArrowLeft';
+  public input_player1_right     : string = 'ArrowRight';
+  public input_player1_start     : string = 'Enter';
+  public input_player1_select    : string = 'Shift';
   public input_player1_l         : string = 'a';
   public input_player1_r         : string = 'd';
   public input_player1_l2        : string = 'q';
@@ -103,12 +103,6 @@ export class PlayerConfig extends Config
   public input_player4_r_y_plus  : string = null;
   public input_player4_r_y_minus : string = null;
 
-  // NOTE Dpad
-  public input_player1_analog_dpad_mode : string = '1';
-  public input_player2_analog_dpad_mode : string = '1';
-  public input_player3_analog_dpad_mode : string = '1';
-  public input_player4_analog_dpad_mode : string = '1';
-
   constructor(json ?: any)
   {
     super();
@@ -122,5 +116,26 @@ export class PlayerConfig extends Config
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+  }
+
+  public setKey(modelKey : string, keyboardValue : string) : string | null
+  {
+    // NOTE Check already assigned
+    let modelKeys : string[] = Object.keys(this);
+    let dupFound  : string = null;
+    for (let k of modelKeys)
+    {
+      if (this[k] !== keyboardValue)
+        continue;
+      // NOTE Store aleady assigned
+      dupFound = k;
+      // NOTE Rewrite value
+      this[k]  = null;
+    }
+
+    // NOTE Assign new value
+    this[modelKey] = keyboardValue;
+
+    return dupFound;
   }
 }

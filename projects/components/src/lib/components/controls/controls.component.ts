@@ -56,6 +56,11 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   public players      : number = 4;
   public activePlayer : number = 1;
 
+  public curAction        : string  = '';
+  public curAssignedKey   : string  = '';
+  public newAssignedKey   : string  = '';
+  public overwritePlayer  : string  = '';
+  public overwriteCmd     : string  = '';
   public listenerHasFocus : boolean = false;
   public showListener     : boolean = false;
   @ViewChild('keyListener') listenerEl : ElementRef<HTMLElement>;
@@ -80,36 +85,74 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   // ---- NOTE Actions -------------------------------------------------------------
   // -------------------------------------------------------------------------------
 
-  confirm() {
-    // we set modal result as true on click on confirm button,
+  public onClickClose() : void
+  {
+    // NOTE We set modal result as true on click on confirm button,
     // then we can get modal result from caller code
     this.result = true;
     this.close();
   }
 
-  // selectTab(tab: Tab)
-  // {
-  //   // deactivate all tabs
-  //   this.tabs.toArray().forEach(tab => tab.active = false);
-
-  //   // activate the tab the user has clicked on.
-  //   tab.active = true;
-  // }
-
-  public onClickEditKey() : void
+  public onClickSave(saveByCore : boolean) : void
   {
+    if (saveByCore)
+      StorageHelper.setConfig(null, this.core);
+    else
+      StorageHelper.setConfig(null, this.core, this.romName);
+
+    // TODO Apply changes
+    // TODO Close ?
+  }
+
+  public onClickReset() : void
+  {
+    // TODO Remove storage by ???
+
+    const config = new PlayerConfig();
+
+    // TODO Apply changes
+  }
+
+  public onClickEditKey(action : string) : void
+  {
+    this.overwritePlayer = null;
+    this.overwriteCmd    = null;
+    this.curAssignedKey  = null;
+    this.newAssignedKey  = null;
+
+    // NOTE Open listener
     this.showListener = true;
     this.changeDetectorRef.detectChanges();
+
+    // NOTE Show current assigned action & key
+    const modelKey      = `input_player${this.activePlayer}_${action}`;
+    this.curAction      = action;
+    this.curAssignedKey = this.playerConfig[modelKey];
 
     // NOTE Keyboard event listener
     this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
     {
-      // TODO Show new key
+      // NOTE Assign new key
+      const overwrite = this.playerConfig.setKey(modelKey, e.key);
+
+      // NOTE Show overwrite
+      if (overwrite && overwrite !== modelKey)
+      {
+        const withoutPrefix  = overwrite.replace('input_player', '');
+        this.overwritePlayer = withoutPrefix.charAt(0);    // Player number
+        this.overwriteCmd    = withoutPrefix.substring(2); // Action
+      }
+
+      // NOTE Show new assigned key
+      this.newAssignedKey = e.key;
+
       // this.saveConfig();
+
+      // NOTE Close listener
       setTimeout(() =>
       {
         this.showListener = false;
-      }, 2000);
+      }, this.overwriteCmd ? 99999 : 2000);
     });
     // NOTE Focus element
     this.listenerEl.nativeElement.focus();
@@ -125,16 +168,18 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   {
     switch (value)
     {
-      case 'up' :
+      case 'ArrowUp' :
         return '↑';
-      case 'down' :
+      case 'ArrowDown' :
         return '↓';
-      case 'left' :
+      case 'ArrowLeft' :
         return '←';
-      case 'right' :
+      case 'ArrowRight' :
         return '→';
-      case 'enter' :
+      case 'Enter' :
         return value + ' ↵';
+      case null :
+        return 'Undefined';
     }
     return value;
   }

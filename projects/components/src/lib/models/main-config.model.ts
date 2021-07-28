@@ -10,6 +10,12 @@ export class MainConfig extends Config
   public rgui_show_start_screen : boolean = false;
   public pause_nonactive        : boolean = true;
 
+  // NOTE Dpad
+  public input_player1_analog_dpad_mode : string = '1';
+  public input_player2_analog_dpad_mode : string = '1';
+  public input_player3_analog_dpad_mode : string = '1';
+  public input_player4_analog_dpad_mode : string = '1';
+
   public input_menu_toggle       : string = 'f1';
   public input_save_state        : string = 'f2';
   public input_load_state        : string = 'f3';
