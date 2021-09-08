@@ -1,130 +1,134 @@
-<div class="modal-content">
+<div class="backdrop"></div>
+<div class="wrapper">
+  <div class="content">
 
-  <!-- NOTE Key listener -->
-  <div class="key-listener" #keyListener tabindex="0"
-    *ngIf="showListener" [@zoomInOnEnter] [@zoomOutOnLeave]>
-
-    <!-- NOTE Close -->
-    <button (click)="showListener = false" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-    </button>
-
-    <div class="info" *ngIf="!newAssignedKey">Press keyboard or gamepad button</div>
-    <div class="info" *ngIf="newAssignedKey">Command successfully updated! <span class="closing">Closing ...</span></div>
-    <div class="binding">
-      <!-- NOTE Current assignment -->
-      <span class="cur" *ngIf="!newAssignedKey">
-        {{ curAction }} | {{ curAssignedKey ? curAssignedKey : 'Undefined' }}
-      </span>
-      <!-- NOTE New assignment -->
-      <span class="new" *ngIf="newAssignedKey">
-        <span class="new-msg">{{ curAction }} | {{ newAssignedKey }}</span>
-        <!-- NOTE Overwrite -->
-        <span class="new-alert" *ngIf="overwriteCmd">
-          <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> -->
-          <span class="alert-msg"><span class="alert-cmd">Player {{ overwritePlayer }} | {{ overwriteCmd }}</span> has been overwritten</span>
+    <!-- NOTE Key listener -->
+    <div class="key-listener" #keyListener tabindex="0"
+      *ngIf="showListener" [@zoomInOnEnter] [@zoomOutOnLeave]>
+  
+      <!-- NOTE Close -->
+      <button (click)="showListener = false" class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+  
+      <div class="info" *ngIf="!newAssignedKey">{{ 'PRESS_KEY' | translate }}</div>
+      <div class="info" *ngIf="newAssignedKey">{{ 'CMD_UPD' | translate }}</div>
+      <div class="binding">
+        <!-- NOTE Current assignment -->
+        <span class="cur" *ngIf="!newAssignedKey">
+          {{ curAction }} | {{ curAssignedKey ? updateKeyboardLabel(curAssignedKey) : ('UNDEFINED' | translate) }}
         </span>
-      </span>
-    </div>
-  </div>
-
-  <div class="modal-header">
-    <!-- NOTE Tabs -->
-    <ul class="nav nav-pills nav-fill">
-      <li class="nav-item" *ngFor="let player of [].constructor(players); let i = index">
-        <a class="nav-link" [class.active]="activePlayer === i + 1" (click)="activePlayer = i + 1">Player {{ i + 1 }}</a>
-      </li>
-    </ul>
-  </div>
-  <div class="modal-body">
-
-    <!-- NOTE Content -->
-    <div class="flex-grid">
-      <div class="col">
-        <h4>DPAD</h4>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th><small>Command</small></th>
-              <th><small>Keyboard</small></th>
-              <!-- <th><small>Gamepad</small></th> -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-uppercase">UP</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('up')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_up) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">DOWN</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('down')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_down) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">LEFT</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('left')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_left) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">RIGHT</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('right')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_right) }}</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- NOTE New assignment -->
+        <span class="new" *ngIf="newAssignedKey">
+          <span class="new-msg">{{ curAction }} | {{ newAssignedKey }}</span>
+          <!-- NOTE Overwrite -->
+          <span class="new-alert" *ngIf="overwriteCmd">
+            <span class="alert-msg"><span class="alert-cmd">{{ 'PLAYER' | translate }} {{ overwritePlayer }} | {{ overwriteCmd }}</span> {{ 'OVERWRITTEN' | translate }}</span>
+          </span>
+        </span>
       </div>
-      <div class="col">
-        <h4>BUTTONS</h4>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th><small>Command</small></th>
-              <th><small>Keyboard</small></th>
-              <!-- <th><small>Gamepad</small></th> -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-uppercase">START</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('start')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_start) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">SELECT</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('select')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_select) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">A</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('a')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_a) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">B</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('b')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_b) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">X</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('x')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_x) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">Y</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('y')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_y) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">L</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('l')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_l) }}</span></td>
-            </tr>
-            <tr>
-              <td class="text-uppercase">R</td>
-              <td><span class="keyboard-key" (click)="onClickEditKey('r')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_r) }}</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <span class="closing" *ngIf="newAssignedKey">{{ 'CLOSING' | translate }} ...</span>
     </div>
-
-  </div>
-  <div class="modal-footer">
-    <div class="flex-btns">
-      <button class="btn" type="button" (click)="onClickSave(true)">Save for all SNES games</button>
-      <button class="btn" type="button" (click)="onClickSave(false)">Save only for this game</button>
-      <button class="btn reset" type="button">Reset</button>
-      <button class="btn close" type="button" (click)="onClickClose()">Close</button>
+  
+    <div class="header">
+      <!-- NOTE Tabs -->
+      <ul class="nav nav-pills nav-fill">
+        <li class="nav-item" *ngFor="let player of [].constructor(players); let i = index">
+          <a class="nav-link" [class.active]="activePlayer === i + 1" (click)="activePlayer = i + 1">{{ 'PLAYER' | translate }} {{ i + 1 }}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="body">
+  
+      <!-- NOTE Content -->
+      <div class="flex-grid">
+        <div class="col">
+          <h4>{{ 'DPAD' | translate }}</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th><small>{{ 'COMMAND' | translate }}</small></th>
+                <th><small>{{ 'KEYBOARD' | translate }}</small></th>
+                <!-- <th><small>Gamepad</small></th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-uppercase">{{ 'UP' | translate }}</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('up')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_up) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">{{ 'DOWN' | translate }}</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('down')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_down) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">{{ 'LEFT' | translate }}</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('left')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_left) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">{{ 'RIGHT' | translate }}</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('right')">{{ updateKeyboardLabel(controls[activePlayer - 1].dpad_right) }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col">
+          <h4>{{ 'BUTTONS' | translate }}</h4>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th><small>{{ 'COMMAND' | translate }}</small></th>
+                <th><small>{{ 'KEYBOARD' | translate }}</small></th>
+                <!-- <th><small>Gamepad</small></th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-uppercase">START</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('start')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_start) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">SELECT</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('select')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_select) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">A</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('a')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_a) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">B</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('b')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_b) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">X</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('x')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_x) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">Y</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('y')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_y) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">L</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('l')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_l) }}</span></td>
+              </tr>
+              <tr>
+                <td class="text-uppercase">R</td>
+                <td><span class="keyboard-key" (click)="onClickEditKey('r')">{{ updateKeyboardLabel(controls[activePlayer - 1].btn_r) }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+    </div>
+    <div class="footer">
+      <div class="flex-btns">
+        <button class="btn close" type="button" (click)="onClickClose()">{{ 'CLOSE' | translate }}</button>
+        <!-- TODO Readable core name -->
+        <button class="btn" type="button" (click)="onClickSave(true)">{{ 'SAVE_CFG_CORE' | translate:{ core : core } }}</button>
+        <button class="btn" type="button" (click)="onClickSave(false)">{{ 'SAVE_CFG_GAME' | translate }}</button>
+        <!-- <button class="btn reset" type="button">Reset</button> -->
+      </div>
     </div>
   </div>
 </div>

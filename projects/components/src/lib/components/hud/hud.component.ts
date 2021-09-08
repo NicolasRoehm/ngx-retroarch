@@ -1,28 +1,29 @@
 // Angular modules
 import { Component }                    from '@angular/core';
+import { OnDestroy }                    from '@angular/core';
+import { ChangeDetectorRef }            from '@angular/core';
 import { ElementRef }                   from '@angular/core';
 import { Input }                        from '@angular/core';
 import { OnInit }                       from '@angular/core';
 
 // External modules
-import { SimpleModalService }           from 'ngx-simple-modal';
 import { slideInUpOnEnterAnimation }    from 'angular-animations';
 import { slideOutDownOnLeaveAnimation } from 'angular-animations';
 import { fromEvent }                    from 'rxjs';
+import { Subscription }                 from 'rxjs';
 import { timer }                        from 'rxjs';
 import { sample }                       from 'rxjs/operators';
-import                                       'range-slider-element';
+import                                       'range-slider-element/dist/index.js';
 
 // Types
 import { Core }                         from '../../types/core.type';
-
-// Components
-import { ControlsComponent }            from '../controls/controls.component';
 
 // Models
 import { MainConfig }                   from '../../models/main-config.model';
 import { PlayerConfig }                 from '../../models/player-config.model';
 
+// Helpers
+import { EmitterHelper }                from '../../helpers/emitter.helper';
 
 declare const RA : any;
 declare const Browser : any;
@@ -36,7 +37,7 @@ declare const Browser : any;
     slideOutDownOnLeaveAnimation({ duration : 200 }),
   ],
 })
-export class HudComponent implements OnInit
+export class HudComponent implements OnInit, OnDestroy
 {
   // NOTE Inherited properties
   @Input() core         : Core;
@@ -45,23 +46,25 @@ export class HudComponent implements OnInit
   @Input() playerConfig : PlayerConfig;
 
   // NOTE Component properties
-  public  isFullscreen  : boolean = false;
-  public  isPaused      : boolean = false;
-  public  isMuted       : boolean = false;
-  public  isMouseMoving : boolean = false;
-  public  isHUDHovered  : boolean = false;
-  public  defaultVolume : number  = 1; // From 0 to 1 with 0.01 by step
-  public  volume        : number  = this.defaultVolume;
+  public  isFullscreen   : boolean = false;
+  public  isPaused       : boolean = false;
+  public  isMuted        : boolean = false;
+  public  isMouseMoving  : boolean = false;
+  public  isHUDHovered   : boolean = false;
+  public  defaultVolume  : number  = 1; // From 0 to 1 with 0.01 by step
+  public  volume         : number  = this.defaultVolume;
+  private togglePauseSub : Subscription;
 
   private movingTimeout : ReturnType<typeof setTimeout>;
   private audioOverride : boolean = false;
 
   constructor
   (
-    private simpleModalService : SimpleModalService,
-    private elementRef         : ElementRef
+    private elementRef        : ElementRef,
+    private changeDetectorRef : ChangeDetectorRef,
   )
   {
+    this.togglePauseSub = this.togglePauseSubscription();
   }
 
   // -------------------------------------------------------------------------------
@@ -73,6 +76,11 @@ export class HudComponent implements OnInit
     this.overrideQueueAudio();
     this.fullscreenSubscription();
     this.watchDebouncedMouse();
+  }
+
+  public ngOnDestroy() : void
+  {
+    this.togglePauseSub.unsubscribe();
   }
 
   private watchDebouncedMouse() : void
@@ -110,36 +118,8 @@ export class HudComponent implements OnInit
     // NOTE Pause
     this.onClickTogglePlayPause(true);
 
-    // NOTE Open modal
-    let disposable = this.simpleModalService.addModal(ControlsComponent, {
-      core         : this.core,
-      romName      : this.romName,
-      mainConfig   : this.mainConfig,
-      playerConfig : this.playerConfig,
-    })
-    .subscribe((isConfirmed : boolean) =>
-    {
-      // NOTE Closing modal
-
-      // NOTE Remove class from wrapper
-      (this.elementRef.nativeElement.parentElement as Element).classList.remove('modal-open');
-
-      // NOTE Play
-      this.onClickTogglePlayPause(false);
-
-      // We get modal result
-      if(isConfirmed) {
-        console.log('accepted');
-      }
-      else {
-        console.log('declined');
-      }
-    });
-    // We can close modal calling disposable.unsubscribe();
-    // If modal was not closed manually close it by timeout
-    // setTimeout(()=>{
-    //     disposable.unsubscribe();
-    // },10000);
+    // NOTE Open controls
+    EmitterHelper.sendToggleControls(true);
   }
 
   public onInputVolume(volume : number) : void
@@ -148,11 +128,13 @@ export class HudComponent implements OnInit
     // NOTE Unmute
     if (this.volume > 0 && this.isMuted)
       this.isMuted = false;
+    this.changeDetectorRef.detectChanges();
   }
 
   public onClickToggleMute() : void
   {
     this.isMuted = !this.isMuted;
+    this.changeDetectorRef.detectChanges();
   }
 
   public onClickTogglePlayPause(setPause : boolean = null) : void
@@ -160,6 +142,7 @@ export class HudComponent implements OnInit
     if (!this.isPaused && (setPause === null || setPause === true))
     {
       this.isPaused = true;
+      this.changeDetectorRef.detectChanges();
       window['Module'].pauseMainLoop();
       return;
     }
@@ -167,6 +150,7 @@ export class HudComponent implements OnInit
     {
       window['Module'].resumeMainLoop();
       this.isPaused = false;
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -176,11 +160,13 @@ export class HudComponent implements OnInit
     {
       (this.elementRef.nativeElement.parentElement as Element).requestFullscreen();
       this.isFullscreen = true;
+      this.changeDetectorRef.detectChanges();
       return;
     }
     // NOTE exitFullscreen is only available on the Document object
     document.exitFullscreen();
     this.isFullscreen = false;
+    this.changeDetectorRef.detectChanges();
     // NOTE Resize canvas
     Browser.setWindowedCanvasSize();
   }
@@ -234,6 +220,7 @@ export class HudComponent implements OnInit
       return;
     }
     this.isMouseMoving = true;
+    this.changeDetectorRef.detectChanges();
     this.setMovingTimeout();
   }
 
@@ -242,12 +229,21 @@ export class HudComponent implements OnInit
     this.movingTimeout = setTimeout(_ =>
     {
       this.isMouseMoving = false;
+      this.changeDetectorRef.detectChanges();
     }, 3000);
   }
 
   // -------------------------------------------------------------------------------
   // ---- NOTE Subscription --------------------------------------------------------
   // -------------------------------------------------------------------------------
+
+  private togglePauseSubscription() : Subscription
+  {
+    return EmitterHelper.emitTogglePause.subscribe(state =>
+    {
+      this.onClickTogglePlayPause(state);
+    });
+  }
 
   private fullscreenSubscription() : void
   {
@@ -259,6 +255,7 @@ export class HudComponent implements OnInit
       if (!document.fullscreenElement)
       {
         this.isFullscreen = false;
+        this.changeDetectorRef.detectChanges();
         // NOTE Resize canvas
         Browser.setWindowedCanvasSize();
       }

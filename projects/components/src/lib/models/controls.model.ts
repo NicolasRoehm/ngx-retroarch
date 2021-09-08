@@ -19,9 +19,18 @@ export class Controls
   public btn_l      : string = null;
   public btn_r      : string = null;
 
-  constructor(pConf : PlayerConfig, player : number)
+  constructor(pConf ?: PlayerConfig, player ?: number)
   {
+    if (!pConf || !player)
+      return;
     this.fromPlayerConfig(pConf, player);
+  }
+
+  public static getPropByAction(action : string) : string
+  {
+    const endOfProp = `_${action}`;
+    const props     = Object.keys(new Controls());
+    return props.find(p => p.endsWith(endOfProp));
   }
 
   private fromPlayerConfig(pConf : PlayerConfig, player : number) : void

@@ -5,10 +5,22 @@ import { EventEmitter } from '@angular/core';
 @Injectable()
 export class EmitterHelper
 {
-  public static emitWasmReady   : EventEmitter<void> = new EventEmitter();
+  public static emitWasmReady      : EventEmitter<void>    = new EventEmitter();
+  public static emitToggleControls : EventEmitter<boolean> = new EventEmitter();
+  public static emitTogglePause    : EventEmitter<boolean> = new EventEmitter();
 
   public static sendWasmReady() : void
   {
     this.emitWasmReady.emit();
+  }
+
+  public static sendToggleControls(state : boolean) : void
+  {
+    this.emitToggleControls.emit(state);
+  }
+
+  public static sendTogglePause(state : boolean) : void
+  {
+    this.emitTogglePause.emit(state);
   }
 }

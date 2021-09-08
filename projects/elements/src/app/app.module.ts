@@ -13,7 +13,6 @@ import { EmulatorComponent }   from 'components';
     BrowserModule,
     ComponentsModule
   ],
-  providers: []
 })
 export class AppModule {
 

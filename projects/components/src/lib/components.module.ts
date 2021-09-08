@@ -1,37 +1,29 @@
 // Angular modules
-import { NgModule }          from '@angular/core';
-import { CommonModule }      from '@angular/common';
+import { CommonModule }            from '@angular/common';
+import { NgModule }                from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // External modules
-import { SimpleModalModule } from 'ngx-simple-modal';
+import { TranslateModule }         from '@ngx-translate/core';
 
 // Components
-import { EmulatorComponent } from './components/emulator/emulator.component';
-import { HudComponent }      from './components/hud/hud.component';
-import { ControlsComponent } from './components/controls/controls.component';
+import { ControlsComponent }       from './components/controls/controls.component';
+import { EmulatorComponent }       from './components/emulator/emulator.component';
+import { HudComponent }            from './components/hud/hud.component';
+import { LoadingBarsComponent }    from './components/loading-bars/loading-bars.component';
+
+export const translateModule   = TranslateModule.forRoot();
 
 @NgModule({
-  declarations    : [ EmulatorComponent, HudComponent, ControlsComponent ],
+  declarations    : [ EmulatorComponent, HudComponent, ControlsComponent, LoadingBarsComponent ],
   imports         : [
+    // Angular modules
     CommonModule,
     BrowserAnimationsModule,
-    SimpleModalModule.forRoot(
-      { container : 'retroarch-container' },
-      {
-        closeOnEscape         : true,
-        closeOnClickOutside   : true,
-        bodyClass             : '',
-        wrapperDefaultClasses : 'modal fade-anim',
-        wrapperClass          : 'in',
-        draggableClass        : '',
-        animationDuration     : 300,
-        autoFocus             : true,
-        draggable             : false,
-      }
-    )
+
+    // External modules
+    translateModule,
   ],
   exports         : [ EmulatorComponent ],
-  entryComponents : [ ControlsComponent ],
 })
 export class ComponentsModule { }

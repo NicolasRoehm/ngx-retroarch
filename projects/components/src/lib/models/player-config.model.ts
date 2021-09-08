@@ -8,12 +8,12 @@ export class PlayerConfig extends Config
   public input_player1_b         : string = 'c';
   public input_player1_x         : string = 's';
   public input_player1_y         : string = 'z';
-  public input_player1_up        : string = 'ArrowUp';
-  public input_player1_down      : string = 'ArrowDown';
-  public input_player1_left      : string = 'ArrowLeft';
-  public input_player1_right     : string = 'ArrowRight';
-  public input_player1_start     : string = 'Enter';
-  public input_player1_select    : string = 'Shift';
+  public input_player1_up        : string = 'up';
+  public input_player1_down      : string = 'down';
+  public input_player1_left      : string = 'left';
+  public input_player1_right     : string = 'right';
+  public input_player1_start     : string = 'enter';
+  public input_player1_select    : string = 'shift';
   public input_player1_l         : string = 'a';
   public input_player1_r         : string = 'd';
   public input_player1_l2        : string = 'q';
@@ -137,5 +137,21 @@ export class PlayerConfig extends Config
     this[modelKey] = keyboardValue;
 
     return dupFound;
+  }
+
+  public static convertKeyboardValue(value : string) : string
+  {
+    switch (value)
+    {
+      case 'ArrowUp' :
+        return 'up';
+      case 'ArrowDown' :
+        return 'down';
+      case 'ArrowLeft' :
+        return 'left';
+      case 'ArrowRight' :
+        return 'right';
+    }
+    return value.toLocaleLowerCase();
   }
 }

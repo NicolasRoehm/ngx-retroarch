@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
   ::ng-deep * {
     font-family: Arial;
@@ -17,43 +18,23 @@
     background: black;
   }
 
-  // NOTE HUD & modal
-  ngx-hud, &.modal-open ::ng-deep simple-modal-holder {
+  // NOTE HUD & Controls
+  ngx-hud, ngx-controls {
     position: absolute;
     height: 100%;
     width: 100%;
   }
+  ngx-controls {
+    overflow: hidden;
+    will-change: transform;
+  }
 
-  // NOTE Modal
-  ::ng-deep simple-modal-holder {
-    @import '../../../../../../node_modules/ngx-simple-modal/styles/simple-modal.scss';
-
-    .modal {
-      position: relative;
-
-      // NOTE Scrollbar
-      &::-webkit-scrollbar {
-        width: 10px;
-      }
-      &::-webkit-scrollbar-thumb {
-        background: rgb(205 180 255 / 51%);
-        border-radius: 10px;
-        &:hover {
-          background: rgb(205 180 255 / 100%);
-        }
-      }
-
-      &.fade-anim {
-        transition: opacity 300ms ease-in-out;
-        .modal-content {
-          transform: none !important;
-          .modal-header, .modal-footer {
-            display: block !important;
-            height: auto;
-            background: #0000002e;
-            border: none;
-          }
-        }
+  // NOTE Container queries (JS)
+  &, &.sm {
+    &:not(.md)::ng-deep.flex-grid {
+      display: block;
+      > .col {
+        width: 100%;
       }
     }
   }
@@ -62,8 +43,9 @@
   // https://codepen.io/folaad/pen/YvmRpz
   .playBtn {
     position: absolute;
-    // display: flex; // NOTE Dynamically applied
+    display: flex;
     font-weight: bold;
+    text-transform: uppercase;
 
     border: 2px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;

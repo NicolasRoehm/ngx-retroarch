@@ -1,5 +1,6 @@
 // Angular modules
 import { ChangeDetectorRef }       from '@angular/core';
+import { Input }                   from '@angular/core';
 import { Component }               from '@angular/core';
 import { ElementRef }              from '@angular/core';
 import { ViewChild }               from '@angular/core';
@@ -8,10 +9,11 @@ import { OnInit }                  from '@angular/core';
 // External modules
 import { zoomInOnEnterAnimation }  from 'angular-animations';
 import { zoomOutOnLeaveAnimation } from 'angular-animations';
-import { SimpleModalComponent }    from 'ngx-simple-modal';
+import { TranslateService }        from '@ngx-translate/core';
 
 // Helpers
 import { StorageHelper }           from '../../helpers/storage.helper';
+import { EmitterHelper }           from '../../helpers/emitter.helper';
 
 // Models
 import { PlayerConfig }            from '../../models/player-config.model';
@@ -28,13 +30,6 @@ import { Core }                    from '../../types/core.type';
 declare const wasmTable : any;
 declare const FS : any;
 
-export interface ControlsModel {
-  core         : Core;
-  romName      : string;
-  mainConfig   : MainConfig;
-  playerConfig : PlayerConfig;
-}
-
 @Component({
   selector    : 'ngx-controls',
   templateUrl : './controls.component.html',
@@ -44,13 +39,13 @@ export interface ControlsModel {
     zoomOutOnLeaveAnimation({ duration : 300 }),
   ],
 })
-export class ControlsComponent extends SimpleModalComponent<ControlsModel, boolean> implements ControlsModel, OnInit
+export class ControlsComponent implements OnInit
 {
   // NOTE Inherited properties
-  public core         : Core;
-  public romName      : string;
-  public mainConfig   : MainConfig;
-  public playerConfig : PlayerConfig;
+  @Input() core         : Core;
+  @Input() romName      : string;
+  @Input() mainConfig   : MainConfig;
+  @Input() playerConfig : PlayerConfig;
 
   // NOTE Component properties
   public players      : number = 4;
@@ -59,7 +54,7 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   public curAction        : string  = '';
   public curAssignedKey   : string  = '';
   public newAssignedKey   : string  = '';
-  public overwritePlayer  : string  = '';
+  public overwritePlayer  : number  = null;
   public overwriteCmd     : string  = '';
   public listenerHasFocus : boolean = false;
   public showListener     : boolean = false;
@@ -67,9 +62,13 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
 
   public controls : Controls[] = [];
 
-  constructor(private changeDetectorRef : ChangeDetectorRef)
+  constructor
+  (
+    private changeDetectorRef : ChangeDetectorRef,
+    private translateService  : TranslateService
+  )
   {
-    super();
+
   }
 
   // -------------------------------------------------------------------------------
@@ -87,31 +86,34 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
 
   public onClickClose() : void
   {
-    // NOTE We set modal result as true on click on confirm button,
-    // then we can get modal result from caller code
-    this.result = true;
-    this.close();
+    // NOTE Close controls
+    EmitterHelper.sendToggleControls(false);
+    // NOTE Resume
+    EmitterHelper.sendTogglePause(false);
   }
 
   public onClickSave(saveByCore : boolean) : void
   {
     if (saveByCore)
-      StorageHelper.setConfig(null, this.core);
+      StorageHelper.setConfig(this.playerConfig, this.core);
     else
-      StorageHelper.setConfig(null, this.core, this.romName);
+      StorageHelper.setConfig(this.playerConfig, this.core, this.romName);
 
-    // TODO Apply changes
-    // TODO Close ?
+    // NOTE Reload config
+    FS.writeFile(FsPath.CONFIG, this.mainConfig.asRetroarchConfig() + this.playerConfig.asRetroarchConfig());
+    // FIXME Module._cmd_reload_config(); https://github.com/BinBashBanana/webretro/issues/2
+    wasmTable.get(108)();
+
+    // NOTE Close
+    this.onClickClose();
   }
 
-  public onClickReset() : void
-  {
-    // TODO Remove storage by ???
-
-    const config = new PlayerConfig();
-
-    // TODO Apply changes
-  }
+  // public onClickReset() : void
+  // {
+  //   // TODO Remove storage by ???
+  //   const config = new PlayerConfig();
+  //   // TODO Apply changes
+  // }
 
   public onClickEditKey(action : string) : void
   {
@@ -122,37 +124,47 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
 
     // NOTE Open listener
     this.showListener = true;
-    this.changeDetectorRef.detectChanges();
 
     // NOTE Show current assigned action & key
     const modelKey      = `input_player${this.activePlayer}_${action}`;
-    this.curAction      = action;
+    this.curAction      = this.translateService.instant(action.toUpperCase());
     this.curAssignedKey = this.playerConfig[modelKey];
+    this.changeDetectorRef.detectChanges();
 
     // NOTE Keyboard event listener
     this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
     {
+      // NOTE Convert pressed key
+      const keyboardValue = PlayerConfig.convertKeyboardValue(e.key);
+
       // NOTE Assign new key
-      const overwrite = this.playerConfig.setKey(modelKey, e.key);
+      const overwrite = this.playerConfig.setKey(modelKey, keyboardValue);
 
       // NOTE Show overwrite
       if (overwrite && overwrite !== modelKey)
       {
         const withoutPrefix  = overwrite.replace('input_player', '');
-        this.overwritePlayer = withoutPrefix.charAt(0);    // Player number
-        this.overwriteCmd    = withoutPrefix.substring(2); // Action
+        this.overwritePlayer = Number(withoutPrefix.charAt(0)); // NOTE Player number - (ex : 1)
+        this.overwriteCmd    = withoutPrefix.substring(2);      // NOTE Action - (ex : select)
+
+        // NOTE Update displayed controls
+        const controlProp = Controls.getPropByAction(this.overwriteCmd);
+        this.controls[this.overwritePlayer - 1][controlProp] = null;
       }
 
       // NOTE Show new assigned key
-      this.newAssignedKey = e.key;
+      this.newAssignedKey = keyboardValue;
 
-      // this.saveConfig();
+      // NOTE Update displayed controls
+      const controlProp = Controls.getPropByAction(action);
+      this.controls[this.activePlayer - 1][controlProp] = keyboardValue;
 
       // NOTE Close listener
       setTimeout(() =>
       {
         this.showListener = false;
-      }, this.overwriteCmd ? 99999 : 2000);
+        this.changeDetectorRef.detectChanges();
+      }, this.overwriteCmd ? 5000 : 2000);
     });
     // NOTE Focus element
     this.listenerEl.nativeElement.focus();
@@ -168,18 +180,18 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   {
     switch (value)
     {
-      case 'ArrowUp' :
+      case 'up' :
         return '↑';
-      case 'ArrowDown' :
+      case 'down' :
         return '↓';
-      case 'ArrowLeft' :
+      case 'left' :
         return '←';
-      case 'ArrowRight' :
+      case 'right' :
         return '→';
-      case 'Enter' :
+      case 'enter' :
         return value + ' ↵';
       case null :
-        return 'Undefined';
+        return this.translateService.instant('UNDEFINED');
     }
     return value;
   }
@@ -187,21 +199,6 @@ export class ControlsComponent extends SimpleModalComponent<ControlsModel, boole
   // -------------------------------------------------------------------------------
   // ---- NOTE Main ----------------------------------------------------------------
   // -------------------------------------------------------------------------------
-
-  private saveConfig() : void
-  {
-    // TODO Prevent double key definition
-
-    const config = new PlayerConfig();
-    config.input_player1_a = 'l';
-    StorageHelper.setConfig(config, this.core, this.romName);
-
-    FS.writeFile(FsPath.CONFIG, this.mainConfig.asRetroarchConfig() + config.asRetroarchConfig());
-    wasmTable.get(108)();
-
-    this.result = true;
-    this.close();
-  }
 
   // -------------------------------------------------------------------------------
   // ---- NOTE Helpers -------------------------------------------------------------

@@ -4,7 +4,9 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
-      "unzipit": "unzipit"
+      "unzipit": "unzipit",
+      "@ngx-translate/core": "ngxTranslateCore",
+      "angular-animations": "angularAnimations"
     }
   }
 }

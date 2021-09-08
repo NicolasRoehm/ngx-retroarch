@@ -1,30 +1,36 @@
 // Angular modules
-import { Component }         from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { OnDestroy }         from '@angular/core';
-import { Input }             from '@angular/core';
-import { ElementRef }        from '@angular/core';
-import { OnInit }            from '@angular/core';
-import { Renderer2 }         from '@angular/core';
+import { Component }            from '@angular/core';
+import { ChangeDetectorRef }    from '@angular/core';
+import { OnDestroy }            from '@angular/core';
+import { Input }                from '@angular/core';
+import { ElementRef }           from '@angular/core';
+import { OnInit }               from '@angular/core';
+import { Renderer2 }            from '@angular/core';
 
 // External modules
-import { unzip }             from 'unzipit';
-import { Subscription }      from 'rxjs';
+import { unzip }                from 'unzipit';
+import { Subscription }         from 'rxjs';
+import { TranslateService }     from '@ngx-translate/core';
 
 // Helpers
-import { EmitterHelper }     from '../../helpers/emitter.helper';
-import { StorageHelper }     from '../../helpers/storage.helper';
+import { EmitterHelper }        from '../../helpers/emitter.helper';
+import { StorageHelper }        from '../../helpers/storage.helper';
 import { ContainerQueryHelper } from '../../helpers/container-query.helper';
 
 // Models
-import { PlayerConfig }      from '../../models/player-config.model';
-import { MainConfig }        from '../../models/main-config.model';
+import { PlayerConfig }         from '../../models/player-config.model';
+import { MainConfig }           from '../../models/main-config.model';
 
 // Enums
-import { FsPath }            from '../../enums/fs-path.enum';
+import { FsPath }               from '../../enums/fs-path.enum';
 
 // Types
-import { Core }              from '../../types/core.type';
+import { Core }                 from '../../types/core.type';
+import { Lang }                 from '../../types/lang.type';
+
+// Consts
+import { English }              from '../../consts/en';
+import { French }               from '../../consts/fr';
 
 // NOTE Retroarch variables
 declare const JSEvents : any;
@@ -47,6 +53,7 @@ window['Module'] = {
 export class EmulatorComponent implements OnInit, OnDestroy
 {
   // NOTE Inherited properties
+  @Input() lang        : Lang    = 'en';
   @Input() assetPath   : string  = './';
   @Input() romPath     : string  = './';
   @Input() core        : Core    = null;
@@ -54,13 +61,15 @@ export class EmulatorComponent implements OnInit, OnDestroy
   @Input() development : boolean = false;
 
   // NOTE Component properties
-  private canvas         : HTMLElement = null;
-  public  isFocused      : boolean     = false;
-  public  romReady       : boolean     = false;
-  public  wasmReady      : boolean     = false;
-  public  bundleReady    : boolean     = false;
-  public  gameStarted    : boolean     = false;
-  private wasmReadySub   : Subscription;
+  private canvas            : HTMLElement = null;
+  public  isFocused         : boolean     = false;
+  public  romReady          : boolean     = false;
+  public  wasmReady         : boolean     = false;
+  public  bundleReady       : boolean     = false;
+  public  gameStarted       : boolean     = false;
+  public  showControls      : boolean     = false;
+  private wasmReadySub      : Subscription;
+  private toggleControlsSub : Subscription;
 
   // NOTE Retroarch propertiers
   public  romName : string      = null;
@@ -70,10 +79,10 @@ export class EmulatorComponent implements OnInit, OnDestroy
   public  playerConfig : PlayerConfig = null;
 
   private installedCores : Core[] = [
-    'genesis_plus_gx',
-    'mgba',
-    'mupen64plus_next',
-    'nestopia',
+    // 'genesis_plus_gx',
+    // 'mgba',
+    // 'mupen64plus_next',
+    // 'nestopia',
     'snes9x'
   ];
   private fileExts : { [key in Core] : string[]; } = {
@@ -94,10 +103,12 @@ export class EmulatorComponent implements OnInit, OnDestroy
   (
     private readonly elementRef : ElementRef,
     private changeDetectorRef   : ChangeDetectorRef,
-    private renderer            : Renderer2
+    private renderer            : Renderer2,
+    private translateService    : TranslateService,
   )
   {
-    this.wasmReadySub = this.wasmReadySubscription();
+    this.wasmReadySub      = this.wasmReadySubscription();
+    this.toggleControlsSub = this.toggleControlsSubscription();
   }
 
   // -------------------------------------------------------------------------------
@@ -108,10 +119,9 @@ export class EmulatorComponent implements OnInit, OnDestroy
   {
     ContainerQueryHelper.watchResize();
 
-    this.initModule();
+    this.initI18n();
 
-    // TODO WIP
-    // this.initCanvas();
+    this.initModule();
 
     // NOTE Load core
     await this.loadCore();
@@ -126,22 +136,8 @@ export class EmulatorComponent implements OnInit, OnDestroy
   public ngOnDestroy() : void
   {
     this.wasmReadySub.unsubscribe();
+    this.toggleControlsSub.unsubscribe();
   }
-
-  // private initCanvas() : void
-  // {
-  //   const wrapperEl = document.getElementById('retroarch-container');
-  //   document.addEventListener('click', ev =>
-  //   {
-  //     const clickedEl = ev.target as Element;
-  //     if (wrapperEl.contains(clickedEl))
-  //     {
-  //       this.isFocused = true;
-  //       return;
-  //     }
-  //     this.isFocused = false;
-  //   });
-  // }
 
   // -------------------------------------------------------------------------------
   // ---- NOTE Actions -------------------------------------------------------------
@@ -155,6 +151,22 @@ export class EmulatorComponent implements OnInit, OnDestroy
   // -------------------------------------------------------------------------------
   // ---- NOTE Main ----------------------------------------------------------------
   // -------------------------------------------------------------------------------
+
+  private initI18n() : void
+  {
+    // NOTE Get const by string
+    let locale = null;
+    switch (this.lang)
+    {
+      case 'en' : locale = English; break;
+      case 'fr' : locale = French;  break;
+    }
+
+    // NOTE Set translation
+    this.translateService.setDefaultLang('en');
+    this.translateService.use(this.lang);
+    this.translateService.setTranslation(this.lang, locale);
+  }
 
   /** NOTE Step 0 */
   private initModule() : void
@@ -282,6 +294,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
     // NOTE Start emulator
     window['Module'].callMain(window['Module'].arguments);
     this.gameStarted = true;
+    this.changeDetectorRef.detectChanges();
 
     this.devLog('3 - Game started');
 
@@ -352,6 +365,15 @@ export class EmulatorComponent implements OnInit, OnDestroy
 
       // NOTE Try to load asset bundle
       this.loadAssetBundle();
+    });
+  }
+
+  private toggleControlsSubscription() : Subscription
+  {
+    return EmitterHelper.emitToggleControls.subscribe(state =>
+    {
+      this.showControls = state;
+      this.changeDetectorRef.detectChanges();
     });
   }
 }
