@@ -15,6 +15,7 @@ import { TranslateService }     from '@ngx-translate/core';
 // Helpers
 import { EmitterHelper }        from '../../helpers/emitter.helper';
 import { StorageHelper }        from '../../helpers/storage.helper';
+import { ForageHelper }         from '../../helpers/forage.helper';
 import { ContainerQueryHelper } from '../../helpers/container-query.helper';
 
 // Models
@@ -117,6 +118,8 @@ export class EmulatorComponent implements OnInit, OnDestroy
 
   public async ngOnInit() : Promise<void>
   {
+    ForageHelper.init();
+
     ContainerQueryHelper.watchResize();
 
     this.initI18n();

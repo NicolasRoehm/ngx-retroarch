@@ -86,10 +86,22 @@ export class ControlsComponent implements OnInit
 
   public onClickClose() : void
   {
-    // NOTE Close controls
+    // NOTE Close component
     EmitterHelper.sendToggleControls(false);
     // NOTE Resume
     EmitterHelper.sendTogglePause(false);
+  }
+
+  public onClickChangeTab(i : number) : void
+  {
+    this.activePlayer = i + 1;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  public onClickCloseListener() : void
+  {
+    this.showListener = false;
+    this.changeDetectorRef.detectChanges();
   }
 
   public onClickSave(saveByCore : boolean) : void
@@ -158,6 +170,8 @@ export class ControlsComponent implements OnInit
       // NOTE Update displayed controls
       const controlProp = Controls.getPropByAction(action);
       this.controls[this.activePlayer - 1][controlProp] = keyboardValue;
+
+      this.changeDetectorRef.detectChanges();
 
       // NOTE Close listener
       setTimeout(() =>

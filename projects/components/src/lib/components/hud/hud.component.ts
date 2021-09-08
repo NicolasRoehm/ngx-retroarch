@@ -24,7 +24,13 @@ import { PlayerConfig }                 from '../../models/player-config.model';
 
 // Helpers
 import { EmitterHelper }                from '../../helpers/emitter.helper';
+import { ForageHelper }                 from '../../helpers/forage.helper';
 
+// Enums
+import { FsPath }                       from '../../enums/fs-path.enum';
+
+// NOTE Retroarch variables
+declare const FS : any;
 declare const RA : any;
 declare const Browser : any;
 
@@ -166,9 +172,49 @@ export class HudComponent implements OnInit, OnDestroy
     // NOTE exitFullscreen is only available on the Document object
     document.exitFullscreen();
     this.isFullscreen = false;
-    this.changeDetectorRef.detectChanges();
     // NOTE Resize canvas
-    Browser.setWindowedCanvasSize();
+    if (!this.isPaused)
+      Browser.setWindowedCanvasSize();
+    this.changeDetectorRef.detectChanges();
+  }
+
+  public async onClickSaveState() : Promise<void>
+  {
+    // NOTE Save state
+    window['Module']._cmd_save_state();
+
+    // TODO Show loader
+
+    // NOTE Looking for saved state
+    const interval = setInterval(async () =>
+    {
+      const res = FS.analyzePath(FsPath.STATE);
+      if (res.object.contents)
+      {
+        clearInterval(interval);
+        await ForageHelper.setGameState(res.object.contents as Uint8Array);
+
+        // TODO Hide loader
+
+        return;
+      }
+    }, 1000);
+  }
+
+  public async onClickLoadState() : Promise<void>
+  {
+    // TODO Add loader && state selector
+
+    // NOTE Get states
+    const states = await ForageHelper.scanGameStates();
+    // NOTE Get selected state
+    const state  = await ForageHelper.getGameState(states[1]);
+
+    // NOTE Define selected state as last one
+    FS.writeFile(FsPath.STATE, state);
+
+    // NOTE Load state
+    window['Module']._cmd_load_state();
   }
 
   // -------------------------------------------------------------------------------
@@ -255,9 +301,10 @@ export class HudComponent implements OnInit, OnDestroy
       if (!document.fullscreenElement)
       {
         this.isFullscreen = false;
-        this.changeDetectorRef.detectChanges();
         // NOTE Resize canvas
-        Browser.setWindowedCanvasSize();
+        if (!this.isPaused)
+          Browser.setWindowedCanvasSize();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }

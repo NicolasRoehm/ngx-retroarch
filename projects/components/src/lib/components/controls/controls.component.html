@@ -5,12 +5,12 @@
     <!-- NOTE Key listener -->
     <div class="key-listener" #keyListener tabindex="0"
       *ngIf="showListener" [@zoomInOnEnter] [@zoomOutOnLeave]>
-  
+
       <!-- NOTE Close -->
-      <button (click)="showListener = false" class="btn">
+      <button (click)="onClickCloseListener()" class="btn">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
       </button>
-  
+
       <div class="info" *ngIf="!newAssignedKey">{{ 'PRESS_KEY' | translate }}</div>
       <div class="info" *ngIf="newAssignedKey">{{ 'CMD_UPD' | translate }}</div>
       <div class="binding">
@@ -29,17 +29,17 @@
       </div>
       <span class="closing" *ngIf="newAssignedKey">{{ 'CLOSING' | translate }} ...</span>
     </div>
-  
+
     <div class="header">
       <!-- NOTE Tabs -->
       <ul class="nav nav-pills nav-fill">
         <li class="nav-item" *ngFor="let player of [].constructor(players); let i = index">
-          <a class="nav-link" [class.active]="activePlayer === i + 1" (click)="activePlayer = i + 1">{{ 'PLAYER' | translate }} {{ i + 1 }}</a>
+          <a class="nav-link" [class.active]="activePlayer === i + 1" (click)="onClickChangeTab(i)">{{ 'PLAYER' | translate }} {{ i + 1 }}</a>
         </li>
       </ul>
     </div>
     <div class="body">
-  
+
       <!-- NOTE Content -->
       <div class="flex-grid">
         <div class="col">
@@ -119,7 +119,7 @@
           </table>
         </div>
       </div>
-  
+
     </div>
     <div class="footer">
       <div class="flex-btns">

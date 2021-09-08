@@ -37,6 +37,7 @@
     "@ngx-translate/core": "^13.0.0",
     "angular-animations": "^0.11.0",
     "document-register-element": "^1.7.2",
+    "localforage": "^1.10.0",
     "ngx-simple-modal": "^1.4.17",
     "range-slider-element": "^1.0.0",
     "rxjs": "~6.6.0",
