@@ -1,9 +1,13 @@
 // Angular modules
-import { Injectable } from '@angular/core';
+import { Injectable }   from '@angular/core';
 
 // External modules
 import * as localForage from 'localforage';
 
+// Models
+import { GameState }    from '../models/game-state.model';
+
+// @dynamic
 @Injectable()
 export class ForageHelper
 {
@@ -17,27 +21,31 @@ export class ForageHelper
   {
     localForage.config({
       driver      : localForage.INDEXEDDB,
-      name        : ForageHelper.storagePrefix,
+      name        : this.storagePrefix,
       version     : 1.0,
       storeName   : 'game_states',
       description : 'Ngx-RetroArch game states'
     });
   }
 
-  public static async setGameState(gameState : Uint8Array) : Promise<void>
+  public static async setGameState(gameState : GameState) : Promise<void>
   {
-    const storeName = 'state' + ForageHelper.getDateSuffix();
-    await localForage.setItem(storeName, gameState);
+    await localForage.setItem(gameState.id, gameState);
   }
 
-  public static async getGameState(storeName : string) : Promise<Uint8Array>
+  public static async getGameState(storeName : string) : Promise<GameState>
   {
     return await localForage.getItem(storeName);
   }
 
-  public static async scanGameStates() : Promise<string[]>
+  public static async scanGameStates(romName : string) : Promise<string[]>
   {
-    return await localForage.keys();
+    const keys = await localForage.keys();
+    let romKeys : string[] = [];
+    for (let key of keys)
+      if (key.startsWith(romName))
+        romKeys.push(key);
+    return romKeys;
   }
 
   // !SECTION Methods
@@ -49,15 +57,4 @@ export class ForageHelper
   // !SECTION LocalStorage
 
   // NOTE Private
-
-  private static getDateSuffix() : string
-  {
-    const date    = new Date();
-    const day     = date.getDate()        < 10 ? '0' + date.getDate()        : date.getDate();
-    const month   = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-    const hours   = date.getHours()       < 10 ? '0' + date.getHours()       : date.getHours();
-    const minutes = date.getMinutes()     < 10 ? '0' + date.getMinutes()     : date.getMinutes();
-    const seconds = date.getSeconds()     < 10 ? '0' + date.getSeconds()     : date.getSeconds();
-    return `_${date.getFullYear()}-${month}-${day}_${hours}:${minutes}:${seconds}`;
-  }
 }

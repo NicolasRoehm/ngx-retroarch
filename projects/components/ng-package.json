@@ -5,6 +5,7 @@
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
       "unzipit": "unzipit",
+      "localforage": "localForage",
       "@ngx-translate/core": "ngxTranslateCore",
       "angular-animations": "angularAnimations"
     }

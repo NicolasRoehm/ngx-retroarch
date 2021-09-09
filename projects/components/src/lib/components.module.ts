@@ -8,6 +8,7 @@ import { TranslateModule }         from '@ngx-translate/core';
 
 // Components
 import { ControlsComponent }       from './components/controls/controls.component';
+import { StatesComponent }         from './components/states/states.component';
 import { EmulatorComponent }       from './components/emulator/emulator.component';
 import { HudComponent }            from './components/hud/hud.component';
 import { LoadingBarsComponent }    from './components/loading-bars/loading-bars.component';
@@ -15,7 +16,7 @@ import { LoadingBarsComponent }    from './components/loading-bars/loading-bars.
 export const translateModule   = TranslateModule.forRoot();
 
 @NgModule({
-  declarations    : [ EmulatorComponent, HudComponent, ControlsComponent, LoadingBarsComponent ],
+  declarations    : [ EmulatorComponent, HudComponent, ControlsComponent, StatesComponent, LoadingBarsComponent ],
   imports         : [
     // Angular modules
     CommonModule,

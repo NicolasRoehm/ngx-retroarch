@@ -62,14 +62,16 @@ export class EmulatorComponent implements OnInit, OnDestroy
   @Input() development : boolean = false;
 
   // NOTE Component properties
-  private canvas            : HTMLElement = null;
-  public  isFocused         : boolean     = false;
-  public  romReady          : boolean     = false;
-  public  wasmReady         : boolean     = false;
-  public  bundleReady       : boolean     = false;
-  public  gameStarted       : boolean     = false;
-  public  showControls      : boolean     = false;
+  public  canvas            : HTMLCanvasElement = null;
+  public  isFocused         : boolean           = false;
+  public  romReady          : boolean           = false;
+  public  wasmReady         : boolean           = false;
+  public  bundleReady       : boolean           = false;
+  public  gameStarted       : boolean           = false;
+  public  showControls      : boolean           = false;
+  public  showStates        : boolean           = false;
   private wasmReadySub      : Subscription;
+  private toggleStatesSub   : Subscription;
   private toggleControlsSub : Subscription;
 
   // NOTE Retroarch propertiers
@@ -109,6 +111,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
   )
   {
     this.wasmReadySub      = this.wasmReadySubscription();
+    this.toggleStatesSub   = this.toggleStatesSubscription();
     this.toggleControlsSub = this.toggleControlsSubscription();
   }
 
@@ -139,6 +142,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
   public ngOnDestroy() : void
   {
     this.wasmReadySub.unsubscribe();
+    this.toggleStatesSub.unsubscribe();
     this.toggleControlsSub.unsubscribe();
   }
 
@@ -175,7 +179,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
   private initModule() : void
   {
     // NOTE Get canvas element
-    this.canvas = document.getElementById('canvas');
+    this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
     // NOTE Update Module.canvas
     window['Module'].canvas = this.canvas;
 
@@ -368,6 +372,15 @@ export class EmulatorComponent implements OnInit, OnDestroy
 
       // NOTE Try to load asset bundle
       this.loadAssetBundle();
+    });
+  }
+
+  private toggleStatesSubscription() : Subscription
+  {
+    return EmitterHelper.emitToggleStates.subscribe(state =>
+    {
+      this.showStates = state;
+      this.changeDetectorRef.detectChanges();
     });
   }
 

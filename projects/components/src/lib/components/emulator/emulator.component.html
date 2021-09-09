@@ -25,6 +25,7 @@
 
   <!-- NOTE HUD -->
   <ngx-hud *ngIf="gameStarted"
+    [canvas]="canvas"
     [core]="core"
     [romName]="romName"
     [mainConfig]="mainConfig"
@@ -38,5 +39,10 @@
     [mainConfig]="mainConfig"
     [playerConfig]="playerConfig">
   </ngx-controls>
+
+  <!-- NOTE States -->
+  <ngx-states *ngIf="showStates"
+    [romName]="romName">
+  </ngx-states>
 
 </div>

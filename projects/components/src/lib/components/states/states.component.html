@@ -1,0 +1,11 @@
+<div class="backdrop"></div>
+<div class="wrapper">
+  <div class="content">
+
+    <div class="card" *ngFor="let state of states">
+      <img [src]="state.safeImg" class="card-img-top" alt="">
+      {{ state.id }}
+    </div>
+
+  </div>
+</div>

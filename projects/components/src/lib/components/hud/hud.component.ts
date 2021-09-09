@@ -21,10 +21,12 @@ import { Core }                         from '../../types/core.type';
 // Models
 import { MainConfig }                   from '../../models/main-config.model';
 import { PlayerConfig }                 from '../../models/player-config.model';
+import { GameState }                    from '../../models/game-state.model';
 
 // Helpers
 import { EmitterHelper }                from '../../helpers/emitter.helper';
 import { ForageHelper }                 from '../../helpers/forage.helper';
+import { EmulatorHelper }               from '../../helpers/emulator.helper';
 
 // Enums
 import { FsPath }                       from '../../enums/fs-path.enum';
@@ -46,6 +48,7 @@ declare const Browser : any;
 export class HudComponent implements OnInit, OnDestroy
 {
   // NOTE Inherited properties
+  @Input() canvas       : HTMLCanvasElement;
   @Input() core         : Core;
   @Input() romName      : string;
   @Input() mainConfig   : MainConfig;
@@ -116,14 +119,18 @@ export class HudComponent implements OnInit, OnDestroy
     this.setIsMouseMoving();
   }
 
-  public onClickShowControls() : void
+  public onClickShowStates() : void
   {
-    // NOTE Add class to wrapper
-    (this.elementRef.nativeElement.parentElement as Element).classList.add('modal-open');
-
     // NOTE Pause
     this.onClickTogglePlayPause(true);
+    // NOTE Open states
+    EmitterHelper.sendToggleStates(true);
+  }
 
+  public onClickShowControls() : void
+  {
+    // NOTE Pause
+    this.onClickTogglePlayPause(true);
     // NOTE Open controls
     EmitterHelper.sendToggleControls(true);
   }
@@ -178,40 +185,46 @@ export class HudComponent implements OnInit, OnDestroy
     this.changeDetectorRef.detectChanges();
   }
 
-  public async onClickSaveState() : Promise<void>
+  public async onClickQuickSave() : Promise<void>
   {
+    // TODO Show loader
+
+    // NOTE Delete previous save
+    const path : any = FS.analyzePath(FsPath.STATE);
+    if (path.object && path.object.contents)
+      FS.unlink(FsPath.STATE);
+
     // NOTE Save state
     window['Module']._cmd_save_state();
 
-    // TODO Show loader
+    // NOTE Get file
+    const file = await EmulatorHelper.readAsyncFile(FsPath.STATE);
+    // NOTE Get index
+    const index : number = (await ForageHelper.scanGameStates(this.romName)).length;
 
-    // NOTE Looking for saved state
-    const interval = setInterval(async () =>
-    {
-      const res = FS.analyzePath(FsPath.STATE);
-      if (res.object.contents)
-      {
-        clearInterval(interval);
-        await ForageHelper.setGameState(res.object.contents as Uint8Array);
+    // NOTE Create game state
+    const gameState = new GameState(index + 1, this.romName, file);
+    gameState.img   = await EmulatorHelper.getScreenshot();
 
-        // TODO Hide loader
+    // NOTE Store game state
+    await ForageHelper.setGameState(gameState);
 
-        return;
-      }
-    }, 1000);
+    // TODO Hide loader
   }
 
-  public async onClickLoadState() : Promise<void>
+  public async onClickQuickLoad() : Promise<void>
   {
-    // TODO Add loader && state selector
-
     // NOTE Get states
-    const states = await ForageHelper.scanGameStates();
-    // NOTE Get selected state
-    const state  = await ForageHelper.getGameState(states[1]);
+    const states = await ForageHelper.scanGameStates(this.romName);
+    if (!states.length)
+      return;
+
+    // NOTE Get last state
+    states.sort().reverse();
+    const state = await ForageHelper.getGameState(states[0]);
 
     // NOTE Define selected state as last one
-    FS.writeFile(FsPath.STATE, state);
+    FS.writeFile(FsPath.STATE, state.state);
 
     // NOTE Load state
     window['Module']._cmd_load_state();
