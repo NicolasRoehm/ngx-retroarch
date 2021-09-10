@@ -134,7 +134,8 @@ export class EmulatorComponent implements OnInit, OnDestroy
     await this.loadRom();
 
     // NOTE Try to load asset bundle
-    await this.loadAssetBundle();
+    if (this.development)
+      await this.loadAssetBundle();
   }
 
   public ngOnDestroy() : void
@@ -369,7 +370,8 @@ export class EmulatorComponent implements OnInit, OnDestroy
       this.wasmReady = true;
 
       // NOTE Try to load asset bundle
-      this.loadAssetBundle();
+      if (this.development)
+        this.loadAssetBundle();
     });
   }
 

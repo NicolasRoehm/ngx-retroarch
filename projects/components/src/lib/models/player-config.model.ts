@@ -142,18 +142,23 @@ export class PlayerConfig extends Config
     return dupFound;
   }
 
+  /**
+   * (Arrows) left, right, up, down,
+   * (Fonctions) f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12,
+   * (Numbers) num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, pageup, pagedown,
+   * (Numpad) keypad0, keypad1, keypad2, keypad3, keypad4, keypad5, keypad6, keypad7, keypad8, keypad9, kp_plus, kp_minus, kp_period, kp_equals, kp_enter,
+   * rshift, shift, rctrl, ctrl, alt, ralt, space, escape, add, subtract, enter, tab, insert, del, end, home, period, capslock, numlock, backspace, multiply, divide, print_screen, scroll_lock,
+   * tilde, backquote, pause, quote, comma, minus, slash, semicolon, equals, leftbracket, backslash, rightbracket
+  */
   public static convertKeyboardValue(e : KeyboardEvent) : string
   {
     switch (e.code)
     {
-      case KeyCode.CODE_UP :
-        return 'up';
-      case KeyCode.CODE_DOWN :
-        return 'down';
-      case KeyCode.CODE_LEFT :
-        return 'left';
+      case KeyCode.CODE_UP    :
+      case KeyCode.CODE_DOWN  :
+      case KeyCode.CODE_LEFT  :
       case KeyCode.CODE_RIGHT :
-        return 'right';
+        return e.code.replace('Arrow', '').toLowerCase();
       case KeyCode.CODE_NUMPAD0 :
       case KeyCode.CODE_NUMPAD1 :
       case KeyCode.CODE_NUMPAD2 :
@@ -165,7 +170,17 @@ export class PlayerConfig extends Config
       case KeyCode.CODE_NUMPAD8 :
       case KeyCode.CODE_NUMPAD9 :
         return e.code.replace('Num', 'key');
+      case KeyCode.CODE_NUMPAD_ADD :
+        return 'kp_plus';
+      case KeyCode.CODE_NUMPAD_SUBTRACT :
+        return 'kp_minus';
+      case KeyCode.CODE_NUMPAD_ENTER :
+        return 'kp_enter';
+      // case KeyCode.CODE_NUMPAD_DECIMAL :
+      //   return 'kp_period';
+      // case KeyCode.CODE_NUMPAD_DIVIDE :
+      // case KeyCode.CODE_NUMPAD_MULTIPLY :
     }
-    return e.key.toLocaleLowerCase();
+    return e.key.toLowerCase();
   }
 }

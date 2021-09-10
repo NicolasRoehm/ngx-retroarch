@@ -3,8 +3,7 @@
 RetroArch as a web component.
 
 ## Roadmap
-- Update player key binding + check if there is the same "wasmTable.get(108)()" function in all unminified cores
-- Save & load game state
+- Check if there is the same "wasmTable.get(108)()" function in all unminified cores / Export `_cmd_reload_config`
 - Save & download saved screenshot
 - Auto detect core
 - Add cores + check if there is the same "queueAudio" function in all unminified cores
@@ -13,13 +12,33 @@ RetroArch as a web component.
 - About project
 - Update usage chapter (readme)
 - Disable retroarch on dev mode
+- Readable core
+- Qwerty
 
-## Usage
+## Installation
 
-The project isn't stable enough. It will be available on NPM as a web component.
+### NPM
+
+```sh
+npm install @nicolasroehm/ngx-retroarch
+```
+```ts
+import '@nicolasroehm/ngx-retroarch';
+```
+### CDN
 
 ```html
-<ngx-retroarch core="snes9x" rom="Goof_Troop.zip"></ngx-retroarch>
+<script src="https://unpkg.com/@nicolasroehm/ngx-retroarch@latest/elements.js"></script>
+```
+## Usage
+
+```html
+<ngx-retroarch
+  core="snes9x"
+  rom="Goof_Troop.zip"
+  rom-path="https://www.example.com/games/snes9x/"
+  asset-path="https://unpkg.com/@nicolasroehm/ngx-retroarch@latest/">
+</ngx-retroarch>
 ```
 
 The following attributes can be set on ngx-retroarch:
@@ -42,14 +61,7 @@ The following attributes can be set on ngx-retroarch:
 | ppsspp           | PSP          |
 | beetle_psx       | PS1          |
 | genesis_plus_gx  | Genesis      |
-### NPM
 
-```sh
-// Not available yet
-npm install @nicolasroehm/ngx-retroarch
-```
-
-### CDN
 
 ## Source code
 

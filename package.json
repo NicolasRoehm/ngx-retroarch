@@ -23,6 +23,7 @@
     "watch:all": "npm run clean && npm-run-all watch:lib start:app",
     "demo": "npm run build:all && npm run copy:rom && npm run serve:demo",
     "serve:demo": "npx http-server ./dist/elements/ -p 4300",
+    "build:publish": "npm run build:all && npm run publish",
     "publish": "npm publish dist/elements --access=public"
   },
   "private": true,

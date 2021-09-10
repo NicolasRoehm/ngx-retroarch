@@ -1,6 +1,6 @@
 {
   "name": "@nicolasroehm/ngx-retroarch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "RetroArch web component",
   "main": "elements.js",
   "scripts": {
