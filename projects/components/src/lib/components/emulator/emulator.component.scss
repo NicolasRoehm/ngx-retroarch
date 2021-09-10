@@ -62,6 +62,33 @@
         position: relative;
         z-index: 1;
 
+        .text-uppercase {
+          text-transform: uppercase;
+        }
+        h4 {
+          text-align: center;
+          margin: 0;
+        }
+
+        .btn {
+          border: 0;
+          color: #fff;
+          fill: #fff;
+          padding: 7px;
+          cursor: pointer;
+          background: #c4a7ff2e;
+          margin: 0 5px;
+          &.save-btn {
+            flex: 1 1 auto;
+          }
+          > svg {
+            vertical-align: middle;
+          }
+          &:hover {
+            background: #7c5ac0;
+          }
+        }
+
         .header, .footer {
           background: #0000002e;
         }
@@ -69,6 +96,21 @@
           padding: 10px;
         }
       }
+    }
+  }
+
+  // -------------------------------------------------------------------------------
+  // ---- NOTE Grid ----------------------------------------------------------------
+  // -------------------------------------------------------------------------------
+
+  ::ng-deep.flex-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    > .col {
+      width: 49%;
+      padding: 5px 0;
+      flex: 0 0 auto;
     }
   }
 

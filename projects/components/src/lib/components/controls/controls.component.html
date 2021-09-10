@@ -36,6 +36,11 @@
         <li class="nav-item" *ngFor="let player of [].constructor(players); let i = index">
           <a class="nav-link" [class.active]="activePlayer === i + 1" (click)="onClickChangeTab(i)">{{ 'PLAYER' | translate }} {{ i + 1 }}</a>
         </li>
+        <li>
+          <button (click)="onClickClose()" class="btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        </li>
       </ul>
     </div>
     <div class="body">
@@ -123,10 +128,9 @@
     </div>
     <div class="footer">
       <div class="flex-btns">
-        <button class="btn close" type="button" (click)="onClickClose()">{{ 'CLOSE' | translate }}</button>
         <!-- TODO Readable core name -->
-        <button class="btn" type="button" (click)="onClickSave(true)">{{ 'SAVE_CFG_CORE' | translate:{ core : core } }}</button>
-        <button class="btn" type="button" (click)="onClickSave(false)">{{ 'SAVE_CFG_GAME' | translate }}</button>
+        <button class="btn save-btn" type="button" (click)="onClickSave(true)">{{ 'SAVE_CFG_CORE' | translate:{ core : core } }}</button>
+        <button class="btn save-btn" type="button" (click)="onClickSave(false)">{{ 'SAVE_CFG_GAME' | translate }}</button>
         <!-- <button class="btn reset" type="button">Reset</button> -->
       </div>
     </div>

@@ -19,7 +19,8 @@ export const French = {
   'LEFT'   : 'Gauche',
   'RIGHT'  : 'Droite',
 
-  'CLOSE'         : 'Fermer',
+  'GAME_STATES' : 'Sauvegardes',
+
   'SAVE_CFG_CORE' : 'Sauvegarder pour tous les jeux {{core}}',
   'SAVE_CFG_GAME' : 'Sauvegarder uniquement pour ce jeu',
 };

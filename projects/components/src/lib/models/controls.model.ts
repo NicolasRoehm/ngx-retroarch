@@ -63,9 +63,4 @@ export class Controls
       this[ctrlKey] = pConf[pKey];
     }
   }
-
-  public toPlayerConfig() : void
-  {
-    // TODO
-  }
 }

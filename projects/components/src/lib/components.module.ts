@@ -13,7 +13,7 @@ import { EmulatorComponent }       from './components/emulator/emulator.componen
 import { HudComponent }            from './components/hud/hud.component';
 import { LoadingBarsComponent }    from './components/loading-bars/loading-bars.component';
 
-export const translateModule   = TranslateModule.forRoot();
+export const translateModule = TranslateModule.forRoot();
 
 @NgModule({
   declarations    : [ EmulatorComponent, HudComponent, ControlsComponent, StatesComponent, LoadingBarsComponent ],

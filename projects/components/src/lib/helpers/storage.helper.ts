@@ -31,6 +31,11 @@ export class StorageHelper
     return new PlayerConfig(json);
   }
 
+  public static removeRomConfig(core : Core, romName : string) : void
+  {
+    StorageHelper.removeItem(`${core}_${romName}_cfg`);
+  }
+
   // !SECTION Methods
 
   // ----------------------------------------------------------------------------------------------
@@ -51,6 +56,12 @@ export class StorageHelper
       return JSON.parse(res);
     console.error('StorageHelper : getItem -> undefined key');
     return null;
+  }
+
+  public static removeItem(key : string, prefix : boolean = true) : void
+  {
+    const itemKey = this.prefixer(key, prefix);
+    localStorage.removeItem(itemKey);
   }
 
   // !SECTION LocalStorage

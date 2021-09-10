@@ -38,6 +38,11 @@ export class ForageHelper
     return await localForage.getItem(storeName);
   }
 
+  public static async deleteGameState(storeName : string) : Promise<void>
+  {
+    return await localForage.removeItem(storeName);
+  }
+
   public static async scanGameStates(romName : string) : Promise<string[]>
   {
     const keys = await localForage.keys();
@@ -50,11 +55,4 @@ export class ForageHelper
 
   // !SECTION Methods
 
-  // ----------------------------------------------------------------------------------------------
-  // SECTION LocalStorage -------------------------------------------------------------------------
-  // ----------------------------------------------------------------------------------------------
-
-  // !SECTION LocalStorage
-
-  // NOTE Private
 }

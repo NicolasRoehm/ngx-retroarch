@@ -107,7 +107,11 @@ export class ControlsComponent implements OnInit
   public onClickSave(saveByCore : boolean) : void
   {
     if (saveByCore)
+    {
       StorageHelper.setConfig(this.playerConfig, this.core);
+      // NOTE Delete config by current rom
+      StorageHelper.removeRomConfig(this.core, this.romName);
+    }
     else
       StorageHelper.setConfig(this.playerConfig, this.core, this.romName);
 
@@ -119,13 +123,6 @@ export class ControlsComponent implements OnInit
     // NOTE Close
     this.onClickClose();
   }
-
-  // public onClickReset() : void
-  // {
-  //   // TODO Remove storage by ???
-  //   const config = new PlayerConfig();
-  //   // TODO Apply changes
-  // }
 
   public onClickEditKey(action : string) : void
   {
@@ -146,6 +143,7 @@ export class ControlsComponent implements OnInit
     // NOTE Keyboard event listener
     this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
     {
+      console.log(e);
       // NOTE Convert pressed key
       const keyboardValue = PlayerConfig.convertKeyboardValue(e.key);
 

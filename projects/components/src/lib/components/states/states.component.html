@@ -2,9 +2,40 @@
 <div class="wrapper">
   <div class="content">
 
-    <div class="card" *ngFor="let state of states">
-      <img [src]="state.safeImg" class="card-img-top" alt="">
-      {{ state.id }}
+    <div class="header">
+      <h4 class="text-uppercase">{{ 'GAME_STATES' | translate }}</h4>
+      <button (click)="onClickClose()" class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <div class="body">
+
+      <div class="flex-grid">
+        <div class="col card" *ngFor="let state of states">
+          <img [src]="state.safeImg" class="card-img-top" alt="Game screenshot">
+          <div class="card-img-overlay">
+            <div class="line action-line">
+              <div class="left">
+                <svg class="btn" (click)="onClickLoad(state.id)" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M5 4v2h14V4H5zm0 10h4v6h6v-6h4l-7-7-7 7z"/>
+                </svg>
+              </div>
+              <div>
+                <svg class="btn" (click)="onClickDelete(state.id)" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="line">
+              <div class="left">{{ state.label }}</div>
+              <div class="date">{{ state.date | date:'dd/MM/yyyy - HH:mm' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>

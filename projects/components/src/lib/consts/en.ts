@@ -19,7 +19,8 @@ export const English = {
   'LEFT'   : 'Left',
   'RIGHT'  : 'Right',
 
-  'CLOSE'         : 'Close',
+  'GAME_STATES' : 'Game states',
+
   'SAVE_CFG_CORE' : 'Save for all {{core}} games',
   'SAVE_CFG_GAME' : 'Save only for this game',
 };

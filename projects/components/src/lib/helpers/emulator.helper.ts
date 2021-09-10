@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 // Enums
 import { FsPath }     from '../enums/fs-path.enum';
 
+// NOTE Retroarch variables
 declare const FS : any;
 
 @Injectable()

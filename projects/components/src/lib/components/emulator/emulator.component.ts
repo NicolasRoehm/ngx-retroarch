@@ -278,6 +278,11 @@ export class EmulatorComponent implements OnInit, OnDestroy
     this.devLog('2.1 - Assets ready', '#421e8a');
     this.bundleReady = true;
     this.changeDetectorRef.detectChanges();
+
+    // NOTE Auto play
+    // setTimeout(_ => {
+      this.onClickPlay();
+    // }, 500);
   }
 
   /** NOTE Step 3 */
