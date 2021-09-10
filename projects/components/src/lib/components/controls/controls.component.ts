@@ -158,7 +158,7 @@ export class ControlsComponent implements OnInit, AfterViewInit
     this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
     {
       // NOTE Convert pressed key
-      const keyboardValue = PlayerConfig.convertKeyboardValue(e.key);
+      const keyboardValue = PlayerConfig.convertKeyboardValue(e);
 
       // NOTE Assign new key
       const overwrite = this.playerConfig.setKey(modelKey, keyboardValue);

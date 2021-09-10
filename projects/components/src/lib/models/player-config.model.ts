@@ -142,20 +142,30 @@ export class PlayerConfig extends Config
     return dupFound;
   }
 
-  public static convertKeyboardValue(value : string) : string
+  public static convertKeyboardValue(e : KeyboardEvent) : string
   {
-    switch (value)
+    switch (e.code)
     {
-      case 'ArrowUp' :
+      case KeyCode.CODE_UP :
         return 'up';
-      case 'ArrowDown' :
+      case KeyCode.CODE_DOWN :
         return 'down';
-      case 'ArrowLeft' :
+      case KeyCode.CODE_LEFT :
         return 'left';
-      case 'ArrowRight' :
+      case KeyCode.CODE_RIGHT :
         return 'right';
-      // TODO NumPad
+      case KeyCode.CODE_NUMPAD0 :
+      case KeyCode.CODE_NUMPAD1 :
+      case KeyCode.CODE_NUMPAD2 :
+      case KeyCode.CODE_NUMPAD3 :
+      case KeyCode.CODE_NUMPAD4 :
+      case KeyCode.CODE_NUMPAD5 :
+      case KeyCode.CODE_NUMPAD6 :
+      case KeyCode.CODE_NUMPAD7 :
+      case KeyCode.CODE_NUMPAD8 :
+      case KeyCode.CODE_NUMPAD9 :
+        return e.code.replace('Num', 'key');
     }
-    return value.toLocaleLowerCase();
+    return e.key.toLocaleLowerCase();
   }
 }
