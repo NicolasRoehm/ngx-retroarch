@@ -7,9 +7,17 @@ import { FsPath }     from '../enums/fs-path.enum';
 // NOTE Retroarch variables
 declare const FS : any;
 
+// @dynamic
 @Injectable()
 export class EmulatorHelper
 {
+  // public static fromUint8ToString() : void
+  // {
+  //   var cfg = FS.readFile('/home/web_user/retroarch/userdata/retroarch.cfg');
+  //   const decoder = new TextDecoder('utf-8'); decoder.decode(cfg);
+  //   FS.analyzePath('/home/web_user/retroarch/userdata/');
+  // }
+
   public static async readAsyncFile(filePath : string) : Promise<Uint8Array>
   {
     return new Promise((resolve) =>

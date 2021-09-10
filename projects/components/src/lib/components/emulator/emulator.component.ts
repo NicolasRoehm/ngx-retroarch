@@ -123,8 +123,6 @@ export class EmulatorComponent implements OnInit, OnDestroy
   {
     ForageHelper.init();
 
-    ContainerQueryHelper.watchResize();
-
     this.initI18n();
 
     this.initModule();
@@ -150,7 +148,7 @@ export class EmulatorComponent implements OnInit, OnDestroy
   // ---- NOTE Actions -------------------------------------------------------------
   // -------------------------------------------------------------------------------
 
-  public async onClickPlay() : Promise<void>
+  public async onClickPlay($event : any) : Promise<void>
   {
     await this.initCore();
   }
@@ -278,11 +276,6 @@ export class EmulatorComponent implements OnInit, OnDestroy
     this.devLog('2.1 - Assets ready', '#421e8a');
     this.bundleReady = true;
     this.changeDetectorRef.detectChanges();
-
-    // NOTE Auto play
-    // setTimeout(_ => {
-      this.onClickPlay();
-    // }, 500);
   }
 
   /** NOTE Step 3 */

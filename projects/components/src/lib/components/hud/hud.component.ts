@@ -1,5 +1,6 @@
 // Angular modules
 import { Component }                    from '@angular/core';
+import { ViewEncapsulation }            from '@angular/core';
 import { OnDestroy }                    from '@angular/core';
 import { ChangeDetectorRef }            from '@angular/core';
 import { ElementRef }                   from '@angular/core';
@@ -37,13 +38,14 @@ declare const RA : any;
 declare const Browser : any;
 
 @Component({
-  selector    : 'ngx-hud',
-  templateUrl : './hud.component.html',
-  styleUrls   : ['./hud.component.scss'],
-  animations  : [
+  selector      : 'ngx-hud',
+  templateUrl   : './hud.component.html',
+  styleUrls     : ['./hud.component.scss'],
+  animations    : [
     slideInUpOnEnterAnimation({ duration : 200 }),
     slideOutDownOnLeaveAnimation({ duration : 200 }),
   ],
+  encapsulation : ViewEncapsulation.ShadowDom
 })
 export class HudComponent implements OnInit, OnDestroy
 {

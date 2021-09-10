@@ -1,13 +1,18 @@
 // Angular modules
 import { ChangeDetectorRef }       from '@angular/core';
+import { AfterViewInit }           from '@angular/core';
+import { ViewEncapsulation }       from '@angular/core';
 import { Input }                   from '@angular/core';
 import { Component }               from '@angular/core';
+import { ElementRef }              from '@angular/core';
+import { ViewChild }               from '@angular/core';
 import { OnInit }                  from '@angular/core';
 import { DomSanitizer }            from '@angular/platform-browser';
 
 // Helpers
 import { ForageHelper }            from '../../helpers/forage.helper';
 import { EmitterHelper }           from '../../helpers/emitter.helper';
+import { ContainerQueryHelper }    from '../../helpers/container-query.helper';
 
 // Models
 import { GameState }               from '../../models/game-state.model';
@@ -19,18 +24,24 @@ import { FsPath }                  from '../../enums/fs-path.enum';
 declare const FS : any;
 
 @Component({
-  selector    : 'ngx-states',
-  templateUrl : './states.component.html',
-  styleUrls   : ['./states.component.scss'],
-  animations  : [],
+  selector      : 'ngx-states',
+  templateUrl   : './states.component.html',
+  styleUrls     : [
+    './states.component.scss',
+    '../../styles/modal.scss',
+    '../../styles/grid.scss',
+  ],
+  animations    : [],
+  encapsulation : ViewEncapsulation.ShadowDom
 })
-export class StatesComponent implements OnInit
+export class StatesComponent implements OnInit, AfterViewInit
 {
   // NOTE Inherited properties
   @Input() romName : string;
 
   // NOTE Component properties
   public states : GameState[] = [];
+  @ViewChild('dataObserveResizes') dataObserveResizes : ElementRef<HTMLElement>;
 
   constructor
   (
@@ -48,6 +59,11 @@ export class StatesComponent implements OnInit
   public ngOnInit() : void
   {
     this.getStates();
+  }
+
+  public ngAfterViewInit() : void
+  {
+    ContainerQueryHelper.watchResize(this.dataObserveResizes.nativeElement);
   }
 
   // -------------------------------------------------------------------------------

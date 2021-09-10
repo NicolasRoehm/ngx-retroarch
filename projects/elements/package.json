@@ -1,12 +1,25 @@
 {
-  "name": "@nicolasroehm/elements",
-  "version": "1.0.0",
-  "description": "",
-  "main": "karma.conf.js",
+  "name": "@nicolasroehm/ngx-retroarch",
+  "version": "1.0.2",
+  "description": "RetroArch web component",
+  "main": "elements.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicolasRoehm/ngx-retroarch.git"
+  },
+  "private": false,
+  "keywords": [
+    "retroarch",
+    "web-component",
+    "ngx",
+    "angular",
+    "typescript",
+    "javascript"
+  ],
   "author": "Nicolas Roehm",
-  "license": "ISC",
-  "files": ["elements.js", "styles.css", "snes9x_libretro.js", "snes9x_libretro.wasm"]
+  "license": "MIT",
+  "homepage": "https://github.com/NicolasRoehm/ngx-retroarch#readme",
+  "files": ["elements.js", "snes9x_libretro.min.js", "snes9x_libretro.wasm"]
 }

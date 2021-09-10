@@ -1,0 +1,69 @@
+.backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: hsla(0, 0%, 0%, 0.452);
+}
+
+.wrapper {
+  position: fixed;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+
+  // NOTE Scrollbar
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgb(205 180 255 / 51%);
+    border-radius: 10px;
+    &:hover {
+      background: rgb(205 180 255 / 100%);
+    }
+  }
+
+  .content {
+    color: #fff;
+    background-color: #6037b3 !important;
+    border-radius: 0 !important;
+    max-width: 600px;
+    margin: 15px auto;
+    position: relative;
+    z-index: 1;
+
+    .text-uppercase {
+      text-transform: uppercase;
+    }
+    h4 {
+      text-align: center;
+      margin: 0;
+    }
+
+    .btn {
+      border: 0;
+      color: #fff;
+      fill: #fff;
+      padding: 7px;
+      cursor: pointer;
+      background: #c4a7ff2e;
+      margin: 0 5px;
+      &.save-btn {
+        flex: 1 1 auto;
+      }
+      > svg {
+        vertical-align: middle;
+      }
+      &:hover {
+        background: #7c5ac0;
+      }
+    }
+
+    .header, .footer {
+      background: #0000002e;
+    }
+    .body {
+      padding: 10px;
+    }
+  }
+}

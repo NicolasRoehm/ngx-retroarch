@@ -19,7 +19,7 @@ export class ContainerQueryHelper
     xl : 960,
   };
 
-  public static watchResize() : void
+  public static watchResize(componentElement : HTMLElement) : void
   {
     // Only run if ResizeObserver is supported.
     if (!('ResizeObserver' in self))
@@ -51,10 +51,6 @@ export class ContainerQueryHelper
       });
     });
 
-    // Find all elements with the `data-observe-resizes` attribute
-    // and start observing them.
-    const elements = document.querySelectorAll('[data-observe-resizes]');
-    for (let element, i = 0; element = elements[i]; i++)
-      ro.observe(element);
+    ro.observe(componentElement);
   }
 }

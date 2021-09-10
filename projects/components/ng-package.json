@@ -6,6 +6,7 @@
     "umdModuleIds": {
       "unzipit": "unzipit",
       "localforage": "localForage",
+      "keycode-js": "KeyCode",
       "@ngx-translate/core": "ngxTranslateCore",
       "angular-animations": "angularAnimations"
     }

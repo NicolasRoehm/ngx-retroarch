@@ -1,25 +1,28 @@
 // Models
-import { Config } from './config.model';
+import { Config }   from './config.model';
+
+// Extenal modules
+import * as KeyCode from 'keycode-js';
 
 export class PlayerConfig extends Config
 {
   // NOTE Player 1
-  public input_player1_a         : string = 'x';
-  public input_player1_b         : string = 'c';
-  public input_player1_x         : string = 's';
-  public input_player1_y         : string = 'z';
+  public input_player1_a         : string = KeyCode.VALUE_X;
+  public input_player1_b         : string = KeyCode.VALUE_C;
+  public input_player1_x         : string = KeyCode.VALUE_S;
+  public input_player1_y         : string = KeyCode.VALUE_Z;
   public input_player1_up        : string = 'up';
   public input_player1_down      : string = 'down';
   public input_player1_left      : string = 'left';
   public input_player1_right     : string = 'right';
-  public input_player1_start     : string = 'enter';
-  public input_player1_select    : string = 'shift';
-  public input_player1_l         : string = 'a';
-  public input_player1_r         : string = 'd';
-  public input_player1_l2        : string = 'q';
-  public input_player1_r2        : string = 'w';
-  public input_player1_l3        : string = 'r';
-  public input_player1_r3        : string = 'f';
+  public input_player1_start     : string = KeyCode.VALUE_RETURN.toLocaleLowerCase();
+  public input_player1_select    : string = KeyCode.VALUE_SHIFT.toLocaleLowerCase();
+  public input_player1_l         : string = KeyCode.VALUE_A;
+  public input_player1_r         : string = KeyCode.VALUE_D;
+  public input_player1_l2        : string = KeyCode.VALUE_Q;
+  public input_player1_r2        : string = KeyCode.VALUE_W;
+  public input_player1_l3        : string = KeyCode.VALUE_R;
+  public input_player1_r3        : string = KeyCode.VALUE_F;
   public input_player1_l_x_plus  : string = null;
   public input_player1_l_x_minus : string = null;
   public input_player1_l_y_plus  : string = null;
@@ -151,6 +154,7 @@ export class PlayerConfig extends Config
         return 'left';
       case 'ArrowRight' :
         return 'right';
+      // TODO NumPad
     }
     return value.toLocaleLowerCase();
   }

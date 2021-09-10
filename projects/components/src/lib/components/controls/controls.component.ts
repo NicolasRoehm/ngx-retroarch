@@ -1,5 +1,7 @@
 // Angular modules
 import { ChangeDetectorRef }       from '@angular/core';
+import { AfterViewInit }           from '@angular/core';
+import { ViewEncapsulation }       from '@angular/core';
 import { Input }                   from '@angular/core';
 import { Component }               from '@angular/core';
 import { ElementRef }              from '@angular/core';
@@ -14,6 +16,7 @@ import { TranslateService }        from '@ngx-translate/core';
 // Helpers
 import { StorageHelper }           from '../../helpers/storage.helper';
 import { EmitterHelper }           from '../../helpers/emitter.helper';
+import { ContainerQueryHelper }    from '../../helpers/container-query.helper';
 
 // Models
 import { PlayerConfig }            from '../../models/player-config.model';
@@ -31,15 +34,20 @@ declare const wasmTable : any;
 declare const FS : any;
 
 @Component({
-  selector    : 'ngx-controls',
-  templateUrl : './controls.component.html',
-  styleUrls   : ['./controls.component.scss'],
-  animations  : [
+  selector      : 'ngx-controls',
+  templateUrl   : './controls.component.html',
+  styleUrls     : [
+    './controls.component.scss',
+    '../../styles/modal.scss',
+    '../../styles/grid.scss'
+  ],
+  animations    : [
     zoomInOnEnterAnimation({ duration : 100 }),
     zoomOutOnLeaveAnimation({ duration : 300 }),
   ],
+  encapsulation : ViewEncapsulation.ShadowDom
 })
-export class ControlsComponent implements OnInit
+export class ControlsComponent implements OnInit, AfterViewInit
 {
   // NOTE Inherited properties
   @Input() core         : Core;
@@ -52,13 +60,14 @@ export class ControlsComponent implements OnInit
   public activePlayer : number = 1;
 
   public curAction        : string  = '';
-  public curAssignedKey   : string  = '';
-  public newAssignedKey   : string  = '';
+  public curAssignedKey   : string  = null;
+  public newAssignedKey   : string  = null;
   public overwritePlayer  : number  = null;
   public overwriteCmd     : string  = '';
   public listenerHasFocus : boolean = false;
   public showListener     : boolean = false;
   @ViewChild('keyListener') listenerEl : ElementRef<HTMLElement>;
+  @ViewChild('dataObserveResizes') dataObserveResizes : ElementRef<HTMLElement>;
 
   public controls : Controls[] = [];
 
@@ -78,6 +87,11 @@ export class ControlsComponent implements OnInit
   public ngOnInit() : void
   {
     this.setControls();
+  }
+
+  public ngAfterViewInit() : void
+  {
+    ContainerQueryHelper.watchResize(this.dataObserveResizes.nativeElement);
   }
 
   // -------------------------------------------------------------------------------
@@ -143,7 +157,6 @@ export class ControlsComponent implements OnInit
     // NOTE Keyboard event listener
     this.listenerEl.nativeElement.addEventListener('keydown', (e) =>
     {
-      console.log(e);
       // NOTE Convert pressed key
       const keyboardValue = PlayerConfig.convertKeyboardValue(e.key);
 

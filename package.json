@@ -21,7 +21,9 @@
     "start:app": "wait-on dist/components/fesm2015 && ng serve --poll 2000",
     "watch:lib": "ng build components --watch",
     "watch:all": "npm run clean && npm-run-all watch:lib start:app",
-    "demo": "npm run build:all && npm run copy:rom && npx http-server ./dist/elements/ -p 4300"
+    "demo": "npm run build:all && npm run copy:rom && npm run serve:demo",
+    "serve:demo": "npx http-server ./dist/elements/ -p 4300",
+    "publish": "npm publish dist/elements --access=public"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +39,7 @@
     "@ngx-translate/core": "^13.0.0",
     "angular-animations": "^0.11.0",
     "document-register-element": "^1.7.2",
+    "keycode-js": "^3.1.0",
     "localforage": "^1.10.0",
     "ngx-simple-modal": "^1.4.17",
     "range-slider-element": "^1.0.0",

@@ -10,7 +10,7 @@
     </div>
     <div class="body">
 
-      <div class="flex-grid">
+      <div class="flex-grid" #dataObserveResizes>
         <div class="col card" *ngFor="let state of states">
           <img [src]="state.safeImg" class="card-img-top" alt="Game screenshot">
           <div class="card-img-overlay">
