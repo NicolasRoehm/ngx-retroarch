@@ -1,6 +1,6 @@
 # NgxRetroarch
 
-RetroArch as a web component.
+RetroArch as a web component. [Online Demo](https://games.centurio-gaming.com/goof-troop-snes)
 
 ## Roadmap
 - Check if there is the same "wasmTable.get(108)()" function in all unminified cores / Export `_cmd_reload_config`
