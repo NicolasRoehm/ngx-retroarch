@@ -2,19 +2,6 @@
 
 RetroArch as a web component. [Online Demo](https://games.centurio-gaming.com/goof-troop-snes)
 
-## Roadmap
-- Check if there is the same "wasmTable.get(108)()" function in all unminified cores / Export `_cmd_reload_config`
-- Save & download saved screenshot
-- Auto detect core
-- Add cores + check if there is the same "queueAudio" function in all unminified cores
-- Speed / Slow
-- Show FPS
-- About project
-- Update usage chapter (readme)
-- Disable retroarch on dev mode
-- Readable core
-- Qwerty
-
 ## Installation
 
 ### NPM
@@ -112,6 +99,19 @@ npm run build:all
 The build artifacts will be stored in the `dist/elements` directory.
 
 ❗There is no ROM included❗
+
+## Roadmap
+- Check if there is the same "wasmTable.get(108)()" function in all unminified cores / Export `_cmd_reload_config`
+- Save & download saved screenshot
+- Auto detect core
+- Add cores + check if there is the same "queueAudio" function in all unminified cores
+- Speed / Slow
+- Show FPS
+- About project
+- Update usage chapter (readme)
+- Disable retroarch on dev mode
+- Readable core
+- Qwerty
 
 ## Thanks
 
