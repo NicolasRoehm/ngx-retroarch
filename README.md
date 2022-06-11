@@ -32,7 +32,7 @@ The following attributes can be set on ngx-retroarch:
 
 - **rom** - The rom file name with its extension. For example: `Goof_Troop.zip`.
 - **rom-path** - The path to the rom (default is `./`). You have to define the path to the rom without the rom file. For example: `https://www.example.com/assets/snes/`
-- **core-path** - The path to the core (default is `./`). Cores are included into the NPM package so you don't have to update the path unless you want to import them by yourself.
+- **asset-path** - The path to the RetroArch core and assets (default is `./`). Cores and assets are included into the NPM package so you don't have to update the path unless you want to import them by yourself.
 - **core** - Choose one the following:
 
 |       Core       |   Console    |
