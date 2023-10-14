@@ -1,6 +1,6 @@
 # NgxRetroarch
 
-RetroArch as a web component. [Online Demo](https://games.centurio-gaming.com/goof-troop-snes)
+RetroArch as a web component. [Online Demo](https://games.centurio-gaming.com/goof-troop-snes) - [Game collections](https://retrobrews.github.io/)
 
 ## Installation
 
